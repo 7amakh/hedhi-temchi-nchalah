@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relevés de notes</title>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+  <style>/* Reset some default styles */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #EFF6FC;
+        color: #333;
+        line-height: 1.6;
+    }
+    
+    header {
+        width: 97%;
+        height: 50px;
+        background-color:#673ab7;
+        border-radius: 10px 10px 10px 10px;
+        padding: 3px 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .back-button {
+        background-color: #673ab7; /* Purple color */
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        display: inline-block;
+    }
+    
+    .back-button img {
+        width: 20px;
+        height: auto;
+    }
+    
+    h1 {
+        font-size: 1.5rem;
+        text-align: center;
+        margin-top: 20px;
+    }
+    
+    main {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .content-container {
+        background-color: #f0f0f0; /* Light gray color */
+        padding: 20px;
+        border-radius: 10px;
+        margin: 20px 0;
+    }
+    
+    .document-image {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+    #file-list {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.file-item {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.file-item a {
+    color: #673ab7;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.file-item small {
+    color: #666;
+    font-size: 0.9em;
+}
+    </style>
+    <header>
+        <div class="back-button">
+            <a href="note.html"><img src="../icon/chevron-gauche.png" alt="Back"></a>
+        </div>
+    </header>
+    <h1>Relevés de notes</h1>
+    <main>
+        <div class="content-container">
+            <div id="file-list">
+                <h3>Vos relevés de notes</h3>
+                <div id="files-container"></div>
+            </div>
+        </div>
+    </main>
+    <script>
+        
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyCkq5qr5sA0Q63tzggfS4GS2_hFVvyXnUw",
+          authDomain: "universityportal-ee6a7.firebaseapp.com",
+          projectId: "universityportal-ee6a7",
+          storageBucket: "universityportal-ee6a7.firebasestorage.app",
+          messagingSenderId: "799224011090",
+          appId: "1:799224011090:web:11082b9b61c89fe4a2028b"
+        };
+      
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig); // No "import" needed
+        // session
+
+        firebase.auth().onAuthStateChanged((user) => {
+    if (!user) {
+        window.location.href = '../login.html'; // Keep auth check
+    } else {
+        // New logic: Get data from localStorage using student's email
+        const studentEmail = user.email; // Get email from Firebase Auth
+        const noteData = JSON.parse(localStorage.getItem(`note_${studentEmail}`));
+
+        if (noteData) {
+            // Update the download link
+            const container = document.querySelector('.content-container');
+            container.innerHTML = `
+                <a href="${noteData.fileContent}" download="${noteData.fileName}">
+                    Télécharger ${noteData.fileName}
+                </a>
+            `;
+        } else {
+            alert("Aucun relevé trouvé pour cet étudiant.");
+        }
+    }
+});
+
+
+    </script>
+</body>
+</html>

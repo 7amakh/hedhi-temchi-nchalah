@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails des Cours</title>
+    <style>
+        body {
+            background-color:#EFF6FC;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            width: 100%;
+            background-color: #6a5acd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
+        
+        header nav a img {
+            width: 24px;
+            height: auto;
+        }
+        
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            flex: 1;
+            width: 100%;
+        }
+        
+        .search-bar {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        #searchInput {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            width: 300px;
+            font-size: 16px;
+        }
+        
+        h1 {
+            color: #6a5acd;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .filiere-info {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .courses-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto 30px;
+            justify-items: center;
+        }
+        
+        .course-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-top: 4px solid #6a5acd;
+            width: 100%;
+            max-width: 350px;
+        }
+        
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        .course-title {
+            color: #6a5acd;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .chapters-list {
+            list-style-type: none;
+            padding-left: 0;
+            margin: 0;
+        }
+        
+        .chapter-item {
+            margin-bottom: 8px;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .chapter-item:last-child {
+            border-bottom: none;
+        }
+        
+        .chapter-link {
+            color: #333;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            transition: color 0.3s;
+        }
+        
+        .chapter-link:hover {
+            color: #6a5acd;
+        }
+        
+        .chapter-link::before {
+            content: "•";
+            color: #6a5acd;
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .button-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="cours.html"><img src="icon/chevron-gauche.png" alt="Retour"></a>
+        </nav>
+    </header>
+    
+    <div class="main-container">
+        <div class="search-bar">
+            <input type="text" placeholder="Search" id="searchInput">
+        </div>
+        
+        <h1 id="page-title">Détails des Cours</h1>
+        <div class="filiere-info" id="filiere-info"></div>
+        
+        <div class="courses-container" id="courses-container">
+            <!-- Le contenu sera généré dynamiquement par JavaScript -->
+        </div>
+        
+
+    
+    <script>
+        // Données complètes par filière et niveau
+        const coursParFiliereNiveau = {
+            // ISI (Ingénierie des Systèmes Informatiques)
+            "1-isi": {
+                nom: "1ère année ISI",
+                description: "Cours de première année en Ingénierie des Systèmes Informatiques",
+                matieres: [
+                    {
+                        nom: "Algorithmique et programmation",
+                        chapitres: [
+                            "Introduction à l'algorithmique",
+                            "Structures de données",
+                            "Complexité algorithmique"
+                        ]
+                    },
+                    {
+                        nom: "Architecture des ordinateurs",
+                        chapitres: [
+                            "Structure des ordinateurs",
+                            "Mémoire et stockage",
+                            "Processeurs et pipelines"
+                        ]
+                    },
+                    {
+                        nom: "Mathématiques discrètes",
+                        chapitres: [
+                            "Logique mathématique",
+                            "Théorie des graphes",
+                            "Algèbre booléenne"
+                        ]
+                    },
+                    {
+                        nom: "Systèmes d'exploitation",
+                        chapitres: [
+                            "Gestion des processus",
+                            "Mémoire virtuelle",
+                            "Systèmes de fichiers"
+                        ]
+                    },
+                    {
+                        nom: "Bases de données",
+                        chapitres: [
+                            "Modèle relationnel",
+                            "Langage SQL",
+                            "Normalisation"
+                        ]
+                    }
+                ]
+            },
+            "2-isi": {
+                nom: "2ème année ISI",
+                description: "Cours de deuxième année en Ingénierie des Systèmes Informatiques",
+                matieres: [
+                    {
+                        nom: "Conception des circuits logiques & Synthèse VHDL",
+                        chapitres: [
+                            "Synthèse des circuits logiques",
+                            "Structure d'une description VHDL",
+                            "VHDL en Logique Combinatoire"
+                        ]
+                    },
+                    {
+                        nom: "Système sur puce (SoC) & Technologies d'interfaçage",
+                        chapitres: [
+                            "Introduction aux système embarqués",
+                            "Systèmes sur puce (SoC)",
+                            "Architecture de l'ensemble",
+                            "Jeux d'instructions ARM"
+                        ]
+                    },
+                    {
+                        nom: "Programmation web",
+                        chapitres: [
+                            "HTML5 & CSS3",
+                            "JavaScript moderne",
+                            "PHP"
+                        ]
+                    },
+                    {
+                        nom: "Programmation mobile",
+                        chapitres: [
+                            "Introduction Générale",
+                            "Introduction à Xamarin et MAUI.NET",
+                            "Xamarin.Forms Notions de base",
+                            "Programmation Xamarin.Forms"
+                        ]
+                    },
+                    {
+                        nom: "Tests de logiciels (Certification ISTQB)",
+                        chapitres: [
+                            "Fondements du testing"
+                        ]
+                    }
+                ]
+            },
+            "3-isi": {
+                nom: "3ème année ISI",
+                description: "Cours de troisième année en Ingénierie des Systèmes Informatiques",
+                matieres: [
+                    {
+                        nom: "Intelligence Artificielle",
+                        chapitres: [
+                            "Algorithmes de recherche",
+                            "Systèmes experts",
+                            "Réseaux neuronaux"
+                        ]
+                    },
+                    {
+                        nom: "Big Data",
+                        chapitres: [
+                            "Hadoop et MapReduce",
+                            "Traitement de flux",
+                            "Analytique des données"
+                        ]
+                    },
+                    {
+                        nom: "Cloud Computing",
+                        chapitres: [
+                            "Architectures cloud",
+                            "Virtualisation",
+                            "Sécurité dans le cloud"
+                        ]
+                    },
+                    {
+                        nom: "Réseaux avancés",
+                        chapitres: [
+                            "Protocoles avancés",
+                            "Réseaux SDN",
+                            "Sécurité réseau"
+                        ]
+                    }
+                ]
+            },
+            
+            // SI (Sciences Informatiques)
+            "1-si": {
+                nom: "1ère année SI",
+                description: "Cours de première année en Sciences Informatiques",
+                matieres: [
+                    {
+                        nom: "Introduction aux SI",
+                        chapitres: [
+                            "Concepts fondamentaux",
+                            "Historique des SI",
+                            "Architecture des SI"
+                        ]
+                    },
+                    {
+                        nom: "Bases de données",
+                        chapitres: [
+                            "Modèle relationnel",
+                            "Langage SQL",
+                            "Conception de bases de données"
+                        ]
+                    },
+                    {
+                        nom: "Réseaux informatiques",
+                        chapitres: [
+                            "Protocoles réseau",
+                            "Architecture TCP/IP",
+                            "Sécurité réseau"
+                        ]
+                    },
+                    {
+                        nom: "Programmation Java",
+                        chapitres: [
+                            "Syntaxe de base",
+                            "Programmation orientée objet",
+                            "Collections Java"
+                        ]
+                    }
+                ]
+            },
+            "2-si": {
+                nom: "2ème année SI",
+                description: "Cours de deuxième année en Sciences Informatiques",
+                matieres: [
+                    {
+                        nom: "Analyse et conception des SI",
+                        chapitres: [
+                            "UML avancé",
+                            "Patrons de conception",
+                            "Modélisation des processus"
+                        ]
+                    },
+                    {
+                        nom: "Développement d'applications d'entreprise",
+                        chapitres: [
+                            "Architecture JEE",
+                            "Spring Framework",
+                            "Microservices"
+                        ]
+                    },
+                    {
+                        nom: "Bases de données avancées",
+                        chapitres: [
+                            "Optimisation des requêtes",
+                            "Bases NoSQL",
+                            "Data Warehousing"
+                        ]
+                    },
+                    {
+                        nom: "Réseaux et sécurité",
+                        chapitres: [
+                            "Protocoles sécurisés",
+                            "Cryptographie",
+                            "Tests d'intrusion"
+                        ]
+                    }
+                ]
+            },
+            "3-si": {
+                nom: "3ème année SI",
+                description: "Cours de troisième année en Sciences Informatiques",
+                matieres: [
+                    {
+                        nom: "Business Intelligence",
+                        chapitres: [
+                            "Data Mining",
+                            "OLAP",
+                            "Reporting"
+                        ]
+                    },
+                    {
+                        nom: "Gouvernance des SI",
+                        chapitres: [
+                            "Cadres de gouvernance",
+                            "Gestion des risques",
+                            "Audit des SI"
+                        ]
+                    },
+                    {
+                        nom: "Cloud Computing",
+                        chapitres: [
+                            "IaaS, PaaS, SaaS",
+                            "Migration vers le cloud",
+                            "Sécurité cloud"
+                        ]
+                    }
+                ]
+            },
+            
+            // MA (Mathématiques Appliquées)
+            "1-ma": {
+                nom: "1ère année MA",
+                description: "Cours de première année en Mathématiques Appliquées",
+                matieres: [
+                    {
+                        nom: "Mathématiques Appliquées",
+                        chapitres: [
+                            "Algèbre linéaire",
+                            "Calcul différentiel",
+                            "Intégration"
+                        ]
+                    },
+                    {
+                        nom: "Algorithmique",
+                        chapitres: [
+                            "Complexité algorithmique",
+                            "Structures de données",
+                            "Algorithmes de tri"
+                        ]
+                    },
+                    {
+                        nom: "Bases de données",
+                        chapitres: [
+                            "Modèle relationnel",
+                            "Langage SQL",
+                            "Conception de BD"
+                        ]
+                    },
+                    {
+                        nom: "Programmation C",
+                        chapitres: [
+                            "Types de données",
+                            "Structures de contrôle",
+                            "Pointeurs et mémoire"
+                        ]
+                    }
+                ]
+            },
+            "2-ma": {
+                nom: "2ème année MA",
+                description: "Cours de deuxième année en Mathématiques Appliquées",
+                matieres: [
+                    {
+                        nom: "Analyse numérique",
+                        chapitres: [
+                            "Méthodes itératives",
+                            "Interpolation polynomiale",
+                            "Intégration numérique"
+                        ]
+                    },
+                    {
+                        nom: "Probabilités et statistiques",
+                        chapitres: [
+                            "Variables aléatoires",
+                            "Lois de probabilité",
+                            "Tests d'hypothèses"
+                        ]
+                    },
+                    {
+                        nom: "Recherche opérationnelle",
+                        chapitres: [
+                            "Programmation linéaire",
+                            "Théorie des graphes",
+                            "Algorithmes gloutons"
+                        ]
+                    },
+                    {
+                        nom: "Programmation Python",
+                        chapitres: [
+                            "Bases de Python",
+                            "NumPy et SciPy",
+                            "Visualisation de données"
+                        ]
+                    }
+                ]
+            },
+            "3-ma": {
+                nom: "3ème année MA",
+                description: "Cours de troisième année en Mathématiques Appliquées",
+                matieres: [
+                    {
+                        nom: "Modélisation mathématique",
+                        chapitres: [
+                            "Modèles continus",
+                            "Modèles discrets",
+                            "Simulation numérique"
+                        ]
+                    },
+                    {
+                        nom: "Théorie des graphes",
+                        chapitres: [
+                            "Parcours de graphes",
+                            "Arbres couvrants",
+                            "Flots dans les réseaux"
+                        ]
+                    },
+                    {
+                        nom: "Data Science",
+                        chapitres: [
+                            "Nettoyage des données",
+                            "Apprentissage automatique",
+                            "Visualisation"
+                        ]
+                    }
+                ]
+            }
+        };
+
+        // Récupération du paramètre de filière et niveau dans l'URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const filiereNiveau = urlParams.get('filiere');
+        
+        // Fonction pour générer le contenu en fonction de la filière et du niveau
+        function genererContenu() {
+            if (filiereNiveau && coursParFiliereNiveau[filiereNiveau]) {
+                const data = coursParFiliereNiveau[filiereNiveau];
+                
+                // Mise à jour du titre et de la description
+                document.getElementById('page-title').textContent = `Détails des Cours - ${data.nom}`;
+                document.getElementById('filiere-info').innerHTML = `
+                    <h3>${data.nom}</h3>
+                    <p>${data.description}</p>
+                `;
+                
+                // Génération des cartes de cours
+                const mainContent = document.getElementById('courses-container');
+                mainContent.innerHTML = data.matieres.map(matiere => `
+                    <div class="course-card">
+                        <h3 class="course-title">${matiere.nom}</h3>
+                        <ul class="chapters-list">
+                            ${matiere.chapitres.map(chapitre => `
+                                <li class="chapter-item">
+                                    <a href="pdf/${matiere.nom.replace(/ /g, '_')}_${chapitre.replace(/ /g, '_')}.pdf" 
+                                       target="_blank" 
+                                       class="chapter-link">${chapitre}</a>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                `).join('');
+                
+                // Ajout de l'événement pour le bouton retour
+                document.querySelector('.back-button').addEventListener('click', () => {
+                    window.location.href = 'cours.html';
+                });
+
+                // Fonctionnalité de recherche
+                document.getElementById('searchInput').addEventListener('input', function() {
+                    const searchTerm = this.value.toLowerCase();
+                    const cards = document.querySelectorAll('.course-card');
+                    
+                    cards.forEach(card => {
+                        const title = card.querySelector('.course-title').textContent.toLowerCase();
+                        const chapters = card.querySelectorAll('.chapter-link');
+                        let hasMatch = title.includes(searchTerm);
+                        
+                        chapters.forEach(chapter => {
+                            const chapterText = chapter.textContent.toLowerCase();
+                            if (chapterText.includes(searchTerm)) {
+                                hasMatch = true;
+                                chapter.style.fontWeight = 'bold';
+                            } else {
+                                chapter.style.fontWeight = 'normal';
+                            }
+                        });
+                        
+                        card.style.display = hasMatch ? 'block' : 'none';
+                    });
+                });
+            } else {
+                // Redirection si la filière/niveau n'existe pas
+                window.location.href = 'cours.html';
+            }
+        }
+        
+        // Appel initial
+        genererContenu();
+    </script>
+</body>
+</html>

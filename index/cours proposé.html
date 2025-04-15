@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails des Cours</title>
+    <style>
+        body {
+            background-color:#EFF6FC;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            width: 100%;
+            background-color: #6a5acd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
+        
+        header nav a img {
+            width: 24px;
+            height: auto;
+        }
+        
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            flex: 1;
+            width: 100%;
+        }
+        
+        .search-bar {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        #searchInput {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            width: 300px;
+            font-size: 16px;
+        }
+        
+        h1 {
+            color: #6a5acd;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .courses-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto 30px;
+            justify-items: center;
+        }
+        
+        .course-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-top: 4px solid #6a5acd;
+            width: 100%;
+            max-width: 350px;
+        }
+        
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        .course-title {
+            color: #6a5acd;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .chapters-list {
+            list-style-type: none;
+            padding-left: 0;
+            margin: 0;
+        }
+        
+        .chapter-item {
+            margin-bottom: 8px;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .chapter-item:last-child {
+            border-bottom: none;
+        }
+        
+        .chapter-link {
+            color: #333;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            transition: color 0.3s;
+        }
+        
+        .chapter-link:hover {
+            color: #6a5acd;
+        }
+        
+        .chapter-link::before {
+            content: "•";
+            color: #6a5acd;
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .button-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .back-button {
+            background: #6a5acd;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+        
+        .back-button:hover {
+            background: #8a2be2;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="cours.html"><img src="../icon/chevron-gauche.png" alt="Retour"></a>
+        </nav>
+    </header>
+    
+    <div class="main-container">
+        <div class="search-bar">
+            <input type="text" placeholder="Search" id="searchInput">
+        </div>
+        
+        <h1>Détails des Cours - 2 ISI</h1>
+        
+        <div class="courses-container">
+            <!-- Vos cartes de cours ici (elles seront automatiquement centrées) -->
+            <!-- Card 1 -->
+            <div class="course-card">
+                <h3 class="course-title">Conception des circuits logiques & Synthèse VHDL</h3>
+                <ul class="chapters-list">
+                    <li class="chapter-item">
+                        <a href="../pdf/CHAPITRE 1-Synthèse des circuits logiques.pdf" target="_blank" class="chapter-link">Synthèse des circuits logiques</a>
+                    </li>
+                    <li class="chapter-item">
+                        <a href="../pdf/CHAPITRE 2-Structure d'une description VHDL.pdf" target="_blank" class="chapter-link">Structure d'une description VHDL</a>
+                    </li>
+                    <li class="chapter-item">
+                        <a href="../pdf/CHAPITRE 3-VHDL en Logique Combinatoire.pdf" target="_blank" class="chapter-link">VHDL en Logique Combinatoire</a>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Card 2 -->
+            <div class="course-card">
+                <h3 class="course-title">Système sur puce (SoC) & Technologies d'interfaçage</h3>
+                <ul class="chapters-list">
+                    <li class="chapter-item">
+                        <a href="../pdf/Chapitre1-Introduction aux système embarqués.pdf" target="_blank" class="chapter-link">Introduction aux système embarqués</a>
+                    </li>
+                    <li class="chapter-item">
+                        <a href="../pdf/Chapitre2-Systèmes sur puce (SoC).pdf" target="_blank" class="chapter-link">Systèmes sur puce (SoC)</a>
+                    </li>
+                    <li class="chapter-item">
+                        <a href="../pdf/Chapitre3-Architecture de l'ensemble.pdf" target="_blank" class="chapter-link">Architecture de l'ensemble</a>
+                    </li>
+                    <li class="chapter-item">
+                        <a href="../pdf/Chapitre4-Jeux d'instructions ARM.pdf" target="_blank" class="chapter-link">Jeux d'instructions ARM</a>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Card 3 -->
+            <div class="course-card">
+                <h3 class="course-title">Programmation web</h3>
+                <ul class="chapters-list">
+                    <li class="chapter-item">
+                        <a href="../pdf/chap 1 html +css.pdf" target="_blank" class="chapter-link">HTML5 & CSS3</a>
+                    </li>
+                    <li class="chapter-item">
+                        <a href="../pdf/chap 2 js.pdf" target="_blank" class="chapter-link">JavaScript moderne</a>
+                    </li>
+                    <li class="chapter-item">
+                        <a href="../pdf/chap 3 php.pdf" target="_blank" class="chapter-link">PHP</a>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Card 4 -->
+            <div class="course-card">
+                <h3 class="course-title">Programmation mobile</h3>
+                <ul class="chapters-list">
+                    <li class="chapter-item">
+                        <a href="../pdf/Chapitre1-DAM-Introduction_générale.pdf" target="_blank" class="chapter-link">Introduction Générale</a>
+                    </li>
+                    <li class="chapter-item">
+                        <a href="../pdf/Chapitre2-DAM-Introduction_à_Xamarin_et_MAUI.NET.pdf" target="_blank" class="chapter-link">Introduction à Xamarin et MAUI.NET</a>
+                    </li>
+                    <li class="chapter-item">
+                        <a href="..Chapitre4-DAM-Xamarin.Forms_Notions_de_base_1.pdf" target="_blank" class="chapter-link">Xamarin.Forms Notions de base 1</a>
+                    </li>
+                    <li class="chapter-item">
+                        <a href="../pdf/Chapitre5-DAM-Xamarin.Forms_Notions_de_base_2.pdf" target="_blank" class="chapter-link">Xamarin.Forms Notions de base 2</a>
+                    </li>
+                    <li class="chapter-item">
+                        <a href="../pdf/Chapitre6-DAM-Porgrammation Xamarin.Forms.pdf" target="_blank" class="chapter-link">Programmation Xamarin.Forms</a>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Card 5 -->
+            <div class="course-card">
+                <h3 class="course-title">Anglais</h3>
+                <ul class="chapters-list">
+                    <li class="chapter-item">
+                        <a href="../pdf/chap2-Classes.pdf" target="_blank" class="chapter-link">Communication technique</a>
+                    </li>
+                    <li class="chapter-item">
+                        <a href="../pdf/chap3-ClassesObjets.pdf" target="_blank" class="chapter-link">Rédaction de documents</a>
+                    </li>
+                    <li class="chapter-item">
+                        <a href="../pdf/chap4-SéquenceCollaboration.pdf" target="_blank" class="chapter-link">Présentations</a>
+                    </li>
+                    <li class="chapter-item">
+                        <a href="../pdf/chap5-EtatsTransitions.pdf" target="_blank" class="chapter-link">Vocabulaire spécialisé</a>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Card 6 -->
+            <div class="course-card">
+                <h3 class="course-title">Tests de logiciels (Certification ISTQB)</h3>
+                <ul class="chapters-list">
+                    <li class="chapter-item">
+                        <a href="../pdf/Cours_ISTQB.pdf" target="_blank" class="chapter-link">Fondements du testing</a>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Card 7 -->
+            <div class="course-card">
+                <h3 class="course-title">Sécurité informatique</h3>
+                <ul class="chapters-list">
+                    <li class="chapter-item">
+                        <a href="../pdf/chap2-Classes.pdf" target="_blank" class="chapter-link">Cryptographie pratique</a>
+                    </li>
+                    <li class="chapter-item">
+                        <a href="../pdf/chap3-ClassesObjets.pdf" target="_blank" class="chapter-link">Sécurité réseau</a>
+                    </li>
+                    <li class="chapter-item">
+                        <a href="../pdf/chap4-SéquenceCollaboration.pdf" target="_blank" class="chapter-link">Tests d'intrusion</a>
+                    </li>
+                    <li class="chapter-item">
+                        <a href="../pdf/chap5-EtatsTransitions.pdf" target="_blank" class="chapter-link">Bonnes pratiques</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    <script>
+        // Données des matières par filière
+        const matieresParFiliere = {
+            "isi": [
+                "Conception des circuits logiques & Synthèse VHDL",
+                "Système sur puce (SoC) & Technologies d'interfaçage",
+                "Programmation web",
+                "Programmation mobile",
+                "Anglais",
+                "Tests de logiciels (Certification ISTQB)",
+                "Sécurité informatique"
+            ],
+            "si": [
+                "Analyse et conception des systèmes d'information",
+                "Développement d'applications d'entreprise",
+                "Bases de données avancées",
+                "Réseaux et sécurité",
+                "Gestion de projet informatique",
+                "Intelligence artificielle",
+                "Anglais technique"
+            ],
+            "ma": [
+                "Mathématiques appliquées",
+                "Algorithmique avancée",
+                "Statistiques et probabilités",
+                "Recherche opérationnelle",
+                "Analyse numérique",
+                "Modélisation mathématique",
+                "Anglais scientifique"
+            ]
+        };
+
+        // Données des chapitres par matière (exemple simplifié)
+        const chapitresParMatiere = {
+            "Conception des circuits logiques & Synthèse VHDL": [
+                "Synthèse des circuits logiques",
+                "Structure d'une description VHDL",
+                "VHDL en Logique Combinatoire"
+            ],
+            "Système sur puce (SoC) & Technologies d'interfaçage": [
+                "Introduction aux système embarqués",
+                "Systèmes sur puce (SoC)",
+                "Architecture de l'ensemble",
+                "Jeux d'instructions ARM"
+            ],
+            "Programmation web": [
+                "HTML5 & CSS3",
+                "JavaScript moderne",
+                "PHP"
+            ],
+            "Analyse et conception des systèmes d'information": [
+                "UML avancé",
+                "Patrons de conception",
+                "Modélisation des processus métiers"
+            ],
+            "Développement d'applications d'entreprise": [
+                "Architecture JEE",
+                "Spring Framework",
+                "Microservices"
+            ],
+            "Mathématiques appliquées": [
+                "Algèbre linéaire",
+                "Théorie des graphes",
+                "Optimisation"
+            ],
+            "Algorithmique avancée": [
+                "Structures de données avancées",
+                "Algorithmes de graphes",
+                "Complexité algorithmique"
+            ]
+        };
+
+        // Récupération du paramètre de filière dans l'URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const filiere = urlParams.get('filiere');
+        
+        // Fonction pour générer le contenu en fonction de la filière
+        function genererContenu() {
+            if (filiere && matieresParFiliere[filiere]) {
+                const titreFiliere = filiere.toUpperCase();
+                document.querySelector('h1').textContent = `Détails des Cours - 2 ${titreFiliere}`;
+                
+                const mainContent = document.querySelector('.courses-container');
+                mainContent.innerHTML = matieresParFiliere[filiere].map(matiere => {
+                    const chapitres = chapitresParMatiere[matiere] || ["Chapitre 1", "Chapitre 2", "Chapitre 3"];
+                    return `
+                        <div class="course-card">
+                            <h3 class="course-title">${matiere}</h3>
+                            <ul class="chapters-list">
+                                ${chapitres.map(chapitre => `
+                                    <li class="chapter-item">
+                                        <a href="pdf/${matiere.replace(/ /g, '_')}_${chapitre.replace(/ /g, '_')}.pdf" target="_blank" class="chapter-link">${chapitre}</a>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }).join('');
+                
+                // Ajout de l'événement pour le bouton retour
+                document.querySelector('.back-button').addEventListener('click', () => {
+                    window.location.href = 'cours.html';
+                });
+
+                // Fonctionnalité de recherche
+                document.getElementById('searchInput').addEventListener('input', function() {
+                    const searchTerm = this.value.toLowerCase();
+                    const cards = document.querySelectorAll('.course-card');
+                    
+                    cards.forEach(card => {
+                        const title = card.querySelector('.course-title').textContent.toLowerCase();
+                        const chapters = card.querySelectorAll('.chapter-link');
+                        let hasMatch = title.includes(searchTerm);
+                        
+                        chapters.forEach(chapter => {
+                            const chapterText = chapter.textContent.toLowerCase();
+                            if (chapterText.includes(searchTerm)) {
+                                hasMatch = true;
+                                chapter.style.fontWeight = 'bold';
+                            } else {
+                                chapter.style.fontWeight = 'normal';
+                            }
+                        });
+                        
+                        card.style.display = hasMatch ? 'block' : 'none';
+                    });
+                });
+            }
+        }
+        
+        // Appel initial
+        genererContenu();
+    </script>
+</body>
+</html>

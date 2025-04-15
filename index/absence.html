@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Absences - ISMAI</title>
+    <style>
+        body {
+            background-color:#EFF6FC;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        header {
+            width: 100%;
+            max-width: 1200px;
+            background-color: #6a5acd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        header nav a img {
+            width: 24px;
+            height: auto;
+        }
+        #backButton {
+            background-color: transparent;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .search-bar {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            margin-top: 20px;
+        }
+        #searchInput {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            width: 300px;
+            font-size: 16px;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+            max-width: 1200px;
+            margin-top: 20px;
+            gap: 20px;
+        }
+        aside {
+            width: 250px;
+            background-color: #34495e;
+            padding: 20px 0;
+            color: white;
+            border-radius: 8px;
+        }
+        #sections-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        #sections-list li {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+        #sections-list li:hover {
+            background-color: #2c3e50;
+        }
+        #sections-list li.active-section {
+            background-color: #2c3e50;
+            border-left: 4px solid #3498db;
+            font-weight: bold;
+        }
+
+        main {
+            flex: 1;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .mh2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        .matieres-container {
+            margin: 20px 0;
+            display: none;
+        }
+        .matiere {
+            padding: 12px 15px;
+            margin: 8px 0;
+            background-color: #e8f4fc;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 4px solid #3498db;
+        }
+        .matiere:hover {
+            background-color: #d1e7f8;
+            transform: translateX(5px);
+        }
+        .matiere.active {
+            background-color: #d1e7f8;
+            font-weight: bold;
+            border-left: 4px solid #2980b9;
+        }
+        .table-container {
+            margin-top: 20px;
+            display: none;
+        }
+        #no-data-message {
+            padding: 20px;
+            text-align: center;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            color: #7f8c8d;
+            font-style: italic;
+            display: none;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        tr:hover {
+            background-color: #f5f7fa;
+        }
+        .empty-date {
+            color: #95a5a6;
+            font-style: italic;
+        }
+        .absence img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 30px;
+            border-radius: 5px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        .elimine {
+            background-color: #ffebee !important;
+            color: #c62828;
+        }
+        .elimine:hover {
+            background-color: #ffcdd2 !important;
+        }
+        .status {
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.9em;
+        }
+        th:nth-child(5), td:nth-child(5) {
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            aside {
+                width: 100%;
+            }
+            .matiere:hover {
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="service.html"><img src="../icon/chevron-gauche.png" alt="Retour"></a>
+        </nav>
+    </header>
+
+    <div class="search-bar">
+        <input type="text" placeholder="Search" id="searchInput">
+    </div>
+
+    <div class="container">
+        <aside>
+            <ul id="sections-list">
+                <li data-section="1-ma">1 MA</li>
+                <li data-section="1-isi">1 ISI</li>
+                <li data-section="2-isi">2 ISI</li>
+                <li data-section="3-isi">3 ISI</li>
+                <li data-section="1-si">1 SI</li>
+                <li data-section="2-si">2 SI</li>
+                <li data-section="3-si">3 SI</li>
+                <li data-section="1-master-ma">1 Mastère MA</li>
+                <li data-section="2-master-ma">2 Mastère MA</li>
+                <li data-section="1-master-assir">1 Mastère ASSIR</li>
+                <li data-section="2-master-assir">2 Mastère ASSIR</li>
+                <li data-section="1-mr-ds">1 MR-DS</li>
+                <li data-section="2-mr-ds">2 MR-DS</li>
+            </ul>
+        </aside>
+
+        <main>
+            <h2 class="mh2">Liste des absences</h2>
+            
+            <div id="matieres-container" class="matieres-container"></div>
+            
+            <div id="table-container" class="table-container">
+                <div id="no-data-message">Aucun étudiant trouvé pour cette matière</div>
+                <table id="students-table">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Prénom</th>
+                            <th>Absences</th>
+                            <th>Dernière absence</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            
+            <div class="absence">
+                <img src="../image/image.jpg" alt="Illustration gestion des absences">
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('#sections-list li');
+            const matieresContainer = document.getElementById('matieres-container');
+            const studentsTable = document.getElementById('students-table').querySelector('tbody');
+            const searchInput = document.getElementById('searchInput');
+            const tableContainer = document.getElementById('table-container');
+            const noDataMessage = document.getElementById('no-data-message');
+
+            // Configuration des matières pour toutes les sections
+            const matieresParSection = {
+                '1-ma': ["Mathématiques Appliquées", "Algorithmique", "Bases de données", "Programmation C", "Systèmes d'information", "Anglais technique"],
+                '1-isi': ["Algorithmique et programmation", "Architecture des ordinateurs", "Mathématiques discrètes", "Systèmes d'exploitation", "Bases de données", "Anglais technique"],
+                '2-isi': ["Système sur puce (SoC) & Technologies d'interfaçage", "Conception des circuits logiques & Synthèse VHDL", "Développement mobile", "Développement mobile TP", "Tests de software (Certification ISTQB)", "Anglais", "Programmation web TP", "Programmation web", "Projet tutoré", "Tests de logiciels", "CLE", "Sécurité informatique TP", "Projet fédéré"],
+                '3-isi': ["Intelligence Artificielle", "Big Data", "Cloud Computing", "Réseaux avancés", "Sécurité informatique", "Projet de fin d'études"],
+                '1-si': ["Introduction aux SI", "Bases de données", "Réseaux informatiques", "Programmation Java", "Gestion de projet", "Anglais technique"],
+                '2-si': ["Administration des SI", "Data Mining", "ERP", "Développement web avancé", "Sécurité des SI", "Projet intégré"],
+                '3-si': ["Business Intelligence", "Gouvernance des SI", "Cloud Computing", "Management des SI", "Projet de fin d'études"],
+                '1-master-ma': ["Mathématiques avancées", "Modélisation statistique", "Analyse numérique", "Recherche opérationnelle", "Séminaire de recherche"],
+                '2-master-ma': ["Théorie des graphes", "Optimisation combinatoire", "Data Science", "Mémoire de master"],
+                '1-master-assir': ["Sécurité des réseaux", "Cryptographie", "Forensique numérique", "Droit informatique", "Séminaire de recherche"],
+                '2-master-assir': ["Sécurité cloud", "Pentesting avancé", "Gestion des risques", "Mémoire de master"],
+                '1-mr-ds': ["Fondements du Data Science", "Machine Learning", "Big Data Technologies", "Visualisation de données", "Séminaire de recherche"],
+                '2-mr-ds': ["Deep Learning", "Traitement du langage naturel", "Projet Data Science", "Mémoire de recherche"]
+            };
+
+            // Liste complète des étudiants pour chaque section
+            const etudiantsParSection = {
+                '1-ma': [
+                    {nom: 'SAIDI', prenom: 'SALAH'},
+                    {nom: 'BARHOUMI', prenom: 'CHAIMA'},
+                    {nom: 'SAIDI', prenom: 'MOUA'}
+                ],
+                '1-isi': [
+                    {nom: 'GAMMOUDI', prenom: 'MOHAMED'},
+                    {nom: 'BARHOUMI', prenom: 'MOUNIR'}
+                ],
+                '2-isi': [
+                    {nom: 'TLILI', prenom: 'HENI'},
+                    {nom: 'JMAL', prenom: 'ANOUAR'},
+                    {nom: 'HAMMAMI', prenom: 'ISLEM'},
+                    {nom: 'JABNOUNI', prenom: 'BILEL'},
+                    {nom: 'BEN AHMED', prenom: 'TAHA'},
+                    {nom: 'AOUADI', prenom: 'KHAOULA'},
+                    {nom: 'HEMLI', prenom: 'AYOUB'},
+                    {nom: 'DHAHRI', prenom: 'SAIEFEDDINE'},
+                    {nom: 'AMRI', prenom: 'BILEL'},
+                    {nom: 'GHOZZI', prenom: 'JIHED'},
+                    {nom: 'KHLIFI', prenom: 'RIHAB'},
+                    {nom: 'KHELIFI', prenom: 'MOHAMED'},
+                    {nom: 'BALGHOUTHI', prenom: 'KHOULOUD'},
+                    {nom: 'CHWAYA', prenom: 'ABDELAZIZ'},
+                    {nom: 'GAIEH', prenom: 'NARJES'},
+                    {nom: 'OUTAY', prenom: 'GHOFRANE'},
+                    {nom: 'DERBALI', prenom: 'AYOUB'},
+                    {nom: 'BACCAR', prenom: 'ICHRAK'},
+                    {nom: 'TLILI', prenom: 'MAHDI'},
+                    {nom: 'ALOUI', prenom: 'MOKHTAR'},
+                    {nom: 'ZENATI', prenom: 'MAYEZ'},
+                    {nom: 'TOUIL', prenom: 'NESRINE'},
+                    {nom: 'BEN HALIMA', prenom: 'MARAM'},
+                    {nom: 'BEN RHOUMA', prenom: 'TALEL'},
+                    {nom: 'BEN ACHOUR', prenom: 'ZAYNEB'},
+                    {nom: 'BEN ALI', prenom: 'MANAR'},
+                    {nom: 'DRIDI', prenom: 'MOHAMED'},
+                    {nom: 'BEN SLIMENE', prenom: 'SAHAR'},
+                    {nom: 'JENNENE', prenom: 'ISKANDER'},
+                    {nom: 'LAAMIRI', prenom: 'DOUA'},
+                    {nom: 'LAAMIMI', prenom: 'LINDA'},
+                    {nom: 'BEN IBRAHIM', prenom: 'MED AIIZ'},
+                    {nom: 'SLOUMA', prenom: 'HIBA'},
+                    {nom: 'SLEIMI', prenom: 'ROUDAYNA'},
+                    {nom: 'BEN HAMIDA', prenom: 'SARAH'},
+                    {nom: 'BEN JEMAA', prenom: 'RAHMA'},
+                    {nom: 'TARHOUNI', prenom: 'NOURHENE'},
+                    {nom: 'BOUSSEMA', prenom: 'SALSABIL'},
+                    {nom: 'HAMMAMI', prenom: 'YASMINE'},
+                    {nom: 'KSOURI', prenom: 'MOHAMED AZIZ'},
+                    {nom: 'AISSA', prenom: 'HIBATALLAH'},
+                    {nom: 'BEN MNA', prenom: 'MARAM'},
+                    {nom: 'REBAI', prenom: 'AYA'},
+                    {nom: 'NAGATTI', prenom: 'NASSIM'},
+                    {nom: 'RAWEN', prenom: 'IYED'},
+                    {nom: 'BOUDHIR', prenom: 'AMAL'},
+                    {nom: 'MEDDEB', prenom: 'HOUSSEM'},
+                    {nom: 'KHMIRI', prenom: 'SOFIAN'}
+                ],
+                '3-isi': [
+                    {nom: 'SALHI', prenom: 'KARIM'},
+                    {nom: 'BOUCHAMAOUI', prenom: 'DALEL'}
+                ],
+                '1-si': [
+                    {nom: 'BOUGHANMI', prenom: 'OUSSEMA'},
+                    {nom: 'RAJHI', prenom: 'SAFWEN'}
+                ],
+                '2-si': [
+                    {nom: 'DHAHBI', prenom: 'MOHAMED'},
+                    {nom: 'AWECHRI', prenom: 'KOSSAY'}
+                ],
+                '3-si': [
+                    {nom: 'DERBALI', prenom: 'KHADIJA'},
+                    {nom: 'OMRI', prenom: 'FAOUZI'}
+                ],
+                '1-master-ma': [
+                    {nom: 'BEN ALI', prenom: 'KARIM'},
+                    {nom: 'MATRI', prenom: 'JABER'}
+                ],
+                '2-master-ma': [
+                    {nom: 'BEN ALI', prenom: 'HAYET'},
+                    {nom: 'BEN ROMADHAN', prenom: 'SAMIR'}
+                ],
+                '1-master-assir': [
+                    {nom: 'BOUABID', prenom: 'YASSMINE'},
+                    {nom: 'LAHDHIRI', prenom: 'KARIM'}
+                ],
+                '2-master-assir': [
+                    {nom: 'BOUABID', prenom: 'BASSEM'},
+                    {nom: 'JABRI', prenom: 'ACHREF'}
+                ],
+                '1-mr-ds': [
+                    {nom: 'BRAHMI', prenom: 'ZOHOUR'},
+                    {nom: 'HENI', prenom: 'MOHAMED'}
+                ],
+                '2-mr-ds': [
+                    {nom: 'MSAKNI', prenom: 'SALWA'},
+                    {nom: 'BARHOUMI', prenom: 'NADA'}
+                ]
+            };
+
+            // Fonction pour compter les absences d'un étudiant pour une matière
+            function compterAbsences(etudiant, sectionId, matiere) {
+                const absencesEnregistrees = JSON.parse(localStorage.getItem('absences')) || {};
+                console.log('Loaded absences:', absencesEnregistrees); // Debug log
+                let count = 0;
+                let lastDate = null;
+
+                for (const [sessionKey, absences] of Object.entries(absencesEnregistrees)) {
+                // Split the sessionKey using the delimiter '|'
+                const parts = sessionKey.split('|');
+                const section = decodeURIComponent(parts[0]); // Decode section
+                const matiereSession = decodeURIComponent(parts[1]); // Decode matiere
+                const date = parts[2];
+                    
+                    if (section === sectionId && matiereSession === matiere) {
+                        const fullName = `${etudiant.nom} ${etudiant.prenom}`;
+                        if (absences[fullName]) {
+                            count++;
+                            if (!lastDate || date > lastDate) {
+                                lastDate = date;
+                            }
+                        }
+                    }
+                }
+
+                return {
+                    count: count,
+                    lastDate: lastDate
+                };
+            }
+
+            // Structure complète des données
+            const matieresEtudiants = {};
+
+            // Remplir les données pour toutes les sections
+            Object.keys(matieresParSection).forEach(sectionId => {
+                matieresEtudiants[sectionId] = {};
+                
+                matieresParSection[sectionId].forEach(matiere => {
+                    const etudiantsSection = etudiantsParSection[sectionId] || [];
+                    matieresEtudiants[sectionId][matiere] = etudiantsSection.map(etudiant => {
+                        const absences = compterAbsences(etudiant, sectionId, matiere);
+                        return {
+                            nom: etudiant.nom,
+                            prenom: etudiant.prenom,
+                            absences: absences.count,
+                            derniere: absences.lastDate,
+                            elimine: absences.count > 3 // Éliminé si plus de 3 absences
+                        };
+                    });
+                });
+            });
+
+            // Afficher les matières d'une section
+            function afficherMatieres(sectionId) {
+                const matieres = matieresEtudiants[sectionId] || {};
+                matieresContainer.innerHTML = '';
+                matieresContainer.style.display = 'block';
+                tableContainer.style.display = 'none';
+                
+                Object.keys(matieres).forEach(matiere => {
+                    const matiereEl = document.createElement('div');
+                    matiereEl.className = 'matiere';
+                    matiereEl.textContent = matiere;
+                    matiereEl.addEventListener('click', () => afficherEtudiants(sectionId, matiere));
+                    matieresContainer.appendChild(matiereEl);
+                });
+            }
+
+            // Afficher les étudiants d'une matière
+            function afficherEtudiants(sectionId, matiere) {
+                const etudiants = matieresEtudiants[sectionId][matiere] || [];
+                studentsTable.innerHTML = '';
+                tableContainer.style.display = 'block';
+                
+                // Retirer la classe active de toutes les matières
+                document.querySelectorAll('.matiere').forEach(m => m.classList.remove('active'));
+                
+                // Ajouter la classe active à la matière sélectionnée
+                document.querySelectorAll('.matiere').forEach(m => {
+                    if (m.textContent === matiere) {
+                        m.classList.add('active');
+                    }
+                });
+
+                if (etudiants.length === 0) {
+                    noDataMessage.style.display = 'block';
+                    document.getElementById('students-table').style.display = 'none';
+                } else {
+                    noDataMessage.style.display = 'none';
+                    document.getElementById('students-table').style.display = 'table';
+                    
+                    etudiants.forEach(etudiant => {
+                        const row = document.createElement('tr');
+                        if (etudiant.elimine) {
+                            row.classList.add('elimine');
+                        }
+                        row.innerHTML = `
+                            <td>${etudiant.nom}</td>
+                            <td>${etudiant.prenom}</td>
+                            <td class="absence-count">${etudiant.absences}</td>
+                            <td class="date-recorded">${etudiant.derniere || '-'}</td>
+                            <td class="status">${etudiant.elimine ? 'Éliminé' : 'Non éliminé'}</td>
+                        `;
+                        studentsTable.appendChild(row);
+                    });
+                }
+            }
+
+            // Fonction pour rafraîchir les données d'absence
+            function refreshAbsenceData() {
+                // Update absence data
+                Object.keys(matieresEtudiants).forEach(sectionId => {
+                    Object.keys(matieresEtudiants[sectionId]).forEach(matiere => {
+                        const etudiantsSection = etudiantsParSection[sectionId] || [];
+                        matieresEtudiants[sectionId][matiere] = etudiantsSection.map(etudiant => {
+                            const absences = compterAbsences(etudiant, sectionId, matiere);
+                            return {
+                                nom: etudiant.nom,
+                                prenom: etudiant.prenom,
+                                absences: absences.count,
+                                derniere: absences.lastDate,
+                                elimine: absences.count > 3
+                            };
+                        });
+                    });
+                });
+
+                // Refresh the UI
+                const activeSection = document.querySelector('#sections-list li.active-section');
+                if (activeSection) {
+                    const sectionId = activeSection.getAttribute('data-section');
+                    const activeMatiere = document.querySelector('.matiere.active');
+                    if (activeMatiere) {
+                        const matiere = activeMatiere.textContent;
+                        afficherEtudiants(sectionId, matiere);
+                    } else {
+                        afficherMatieres(sectionId);
+                    }
+                }
+            }
+
+            // Initialisation
+            sections.forEach(section => {
+                section.addEventListener('click', function() {
+                    sections.forEach(s => s.classList.remove('active-section'));
+                    this.classList.add('active-section');
+                    afficherMatieres(this.getAttribute('data-section'));
+                });
+            });
+
+            // Sélectionner la première section par défaut
+            if (sections.length > 0) {
+                sections[0].click();
+            }
+
+            // Recherche dans les sections
+            searchInput.addEventListener('input', function() {
+                const term = this.value.toLowerCase();
+                sections.forEach(section => {
+                    const sectionText = section.textContent.toLowerCase();
+                    section.style.display = sectionText.includes(term) ? 'block' : 'none';
+                });
+            });
+
+            // Écouter les changements dans le localStorage
+            window.addEventListener('storage', function(event) {
+                if (event.key === 'absences') {
+                    refreshAbsenceData(); // Refresh the absence data
+                }
+            });
+
+            // Écouter l'événement personnalisé (pour les changements dans la même fenêtre)
+            window.addEventListener('absencesUpdated', function() {
+                console.log('Custom event absencesUpdated received');
+                refreshAbsenceData(); // Refresh the absence data
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Localisation de l’Université – Ave Assad Ibn Fourat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        #map {
+            height: 400px;
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+        .address-info {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+        .directions-button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .directions-button:hover {
+            background-color: #2980b9;
+        }
+        @media (max-width: 600px) {
+            #map {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Localisation de l’Université</h1>
+        
+        <div class="address-info">
+            <h2>Adresse</h2>
+            <p>Avenue Assad Ibn Fourat<br>
+            Kairouan 3100<br>
+            Coordonnées : 35.6756265, 10.1028197</p>
+            
+            <button class="directions-button" onclick="openDirections()">
+                Itinéraire
+            </button>
+        </div>
+
+        <div id="map"></div>
+    </div>
+
+    <script>
+        function initMap() {
+            const universityLocation = { lat: 35.6756265, lng: 10.1028197 };
+            
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 16,
+                center: universityLocation,
+                mapTypeId: "hybrid"
+            });
+
+            new google.maps.Marker({
+                position: universityLocation,
+                map: map,
+                title: "Université",
+                label: {
+                    text: "Université",
+                    color: "#ffffff",
+                    fontSize: "14px",
+                    fontWeight: "bold"
+                }
+            });
+        }
+
+        function openDirections() {
+            window.open("https://www.google.com/maps/dir/35.6740222,10.1143183/ISMAI,+ave+Assad+Ibn+Fourat,+Kairouan/@35.6746027,10.1072426,16z/data=!3m1!4b1!4m9!4m8!1m1!4e1!1m5!1m1!1s0x12fdc538310c5baf:0x21c1db090b76f1ef!2m2!1d10.1053946!2d35.6756222?entry=ttu&g_ep=EgoyMDI1MDQwOS4wIKXMDSoJLDEwMjExNDUzSAFQAw%3D%3D");
+        }
+    </script>
+
+    <!-- Remplacez VOTRE_CLE_API_ICI par votre clé API réelle -->
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=VOTRE_CLE_API_ICI&callback=initMap">
+    </script>
+</body>
+</html>

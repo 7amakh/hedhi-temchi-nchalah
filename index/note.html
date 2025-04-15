@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes Consultation</title>
+    <link rel="stylesheet" href="../style/note.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="profile">
+            <a href="profile.html"><img src="../image/360_F_227450952_KQCMShHPOPebUXklULsKsROk5AvN6H1H.jpg" alt="Profile Picture"></a>
+            <!-- Icons moved inside the profile div -->
+            <div class="icons">
+                <a href="../accueil.html"><img src="../icon/maison.png" alt="Home"></a>
+                <a href="message.html"><img src="../icon/enveloppe.png" alt="ISMAI-CONNECT"></a>
+                <a href="service.html"><img src="../icon/poignee-de-main.png" alt="Service"></a>
+                <a href="cours.html"><img src="../icon/livre-alt.png" alt="Cours"></a>
+                <a href="note.html"><img src="../icon/editer.png" alt="Notes"></a>
+                <a href="about.html"><img src="../icon/exclamation.png" alt="About"></a>
+                <a href="../index.html"><img src="../icon/logout.png" alt="Home"></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rest of the code remains unchanged -->
+    <div class="main-content">
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <input type="text" placeholder="Search">
+        </div>
+
+        <!-- Title -->
+        <h2>Les notes que vous pouvez consulter</h2>
+
+        <!-- Sections -->
+        <div class="sections">
+            <ul>
+                <li>Section</li>
+                <li>1 SI</li>
+                <li>2 SI</li>
+                <li>3 SI</li>
+                <li>1 ISI</li>
+                <li>2 ISI</li>
+                <li>3 ISI</li>
+                <li>1 MA</li>
+            </ul>
+        </div>
+        
+        <!-- Verification Card -->
+        <div class="verification-card">
+            <p>Nous devons vérifier à votre compte</p>
+            <img src="../icon/panneau-davertissement.png" alt="Warning Icon">
+            <form id="noteLoginForm" >
+                <input type="text" name="email" id="email" placeholder="Username ou E-mail">
+                <input type="password" name="password" id="password" placeholder="Password">
+                <button type="submit">Verification</button>
+            </form>
+        </div>
+    </div>
+</body>
+<script>
+    
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyCkq5qr5sA0Q63tzggfS4GS2_hFVvyXnUw",
+      authDomain: "universityportal-ee6a7.firebaseapp.com",
+      projectId: "universityportal-ee6a7",
+      storageBucket: "universityportal-ee6a7.firebasestorage.app",
+      messagingSenderId: "799224011090",
+      appId: "1:799224011090:web:11082b9b61c89fe4a2028b"
+    };
+  
+    // Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig); // No "import" needed
+
+    document.getElementById('noteLoginForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  
+  firebase.auth().signInWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      // Store the authenticated user's email in sessionStorage
+      sessionStorage.setItem('studentEmail', userCredential.user.email);
+      // Redirect to releves.html
+      window.location.href = 'releves.html';
+    })
+    .catch(error => alert("Error: " + error.message));
+});
+  </script>
+</html>

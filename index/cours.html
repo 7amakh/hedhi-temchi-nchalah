@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cours - Plateforme Éducative</title>
+    <style>
+        /* Styles communs */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa;
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 70px;
+            background-color: #6a5acd;
+            padding: 20px 0;
+            position: fixed;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .profile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1rem 0;
+        }
+
+        .profile img {
+            width: 30px;
+            height: 30px;
+            filter: brightness(0) invert(1);
+        }
+
+        .main-content {
+            margin-left: 70px;
+            padding: 30px;
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .search-bar {
+            position: absolute;
+            top: 20px;
+            left: 100px;
+        }
+
+        .search-bar input {
+            width: 250px;
+            padding: 10px 15px;
+            border-radius: 25px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        h1 {
+            color: #6a5acd;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 28px;
+            text-align: center;
+        }
+
+        .description {
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 16px;
+            text-align: center;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Styles pour la vue grille (cours.html) */
+        .courses-grid {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .course-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            width: 350px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+        }
+
+        .card-header {
+            background-color: #6a5acd;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .levels-section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            color: #6a5acd;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed #e0e0e0;
+            justify-content: center;
+        }
+
+        .section-title::before {
+            content: "•";
+            margin-right: 10px;
+            font-size: 20px;
+        }
+
+        .levels-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .level-item {
+            background-color: #f8f5ff;
+            border-radius: 8px;
+            padding: 10px 15px;
+            transition: all 0.2s;
+            grid-column: span 1;
+        }
+
+        .level-item:last-child:nth-child(odd) {
+            grid-column: 1 / -1;
+            width: 50%;
+            justify-self: center;
+        }
+
+        .level-item:hover {
+            background-color: #6a5acd;
+        }
+
+        .level-item:hover a {
+            color: white;
+        }
+
+        .level-item a {
+            color: #555;
+            text-decoration: none;
+            font-size: 14px;
+            display: block;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        /* Styles pour la vue détaillée (cours proposé.html) */
+        .courses-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto 30px;
+            justify-items: center;
+        }
+        
+        .course-card-detailed {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-top: 4px solid #6a5acd;
+            width: 100%;
+            max-width: 350px;
+        }
+        
+        .course-card-detailed:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        .course-title {
+            color: #6a5acd;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .chapters-list {
+            list-style-type: none;
+            padding-left: 0;
+            margin: 0;
+        }
+        
+        .chapter-item {
+            margin-bottom: 8px;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .chapter-item:last-child {
+            border-bottom: none;
+        }
+        
+        .chapter-link {
+            color: #333;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            transition: color 0.3s;
+        }
+        
+        .chapter-link:hover {
+            color: #6a5acd;
+        }
+        
+        .chapter-link::before {
+            content: "•";
+            color: #6a5acd;
+            margin-right: 10px;
+            font-size: 20px;
+        }
+
+        .more-button {
+            background: #6a5acd;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(106, 90, 205, 0.2);
+            margin: 40px auto;
+            display: block;
+        }
+
+        .more-button:hover {
+            background: #8a2be2;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(106, 90, 205, 0.3);
+        }
+
+        /* Contrôle de la vue */
+        #courses-grid-view {
+            display: block;
+        }
+
+        #courses-detail-view {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="profile">
+            <a href="../accueil.html"><img src="../icon/maison.png" alt="Accueil"></a>
+            <a href="message.html"><img src="../icon/enveloppe.png" alt="Messages"></a>
+            <a href="service.html"><img src="../icon/poignee-de-main.png" alt="Services"></a>
+            <a href="#" class="active"><img src="../icon/livre-alt.png" alt="Cours"></a>
+            <a href="note.html"><img src="../icon/editer.png" alt="Notes"></a>
+            <a href="about.html"><img src="../icon/exclamation.png" alt="À propos"></a>
+            <a href="../index.html"><img src="../icon/logout.png" alt="Déconnexion"></a>
+        </div>
+    </div>
+    
+    <div class="search-bar">
+        <input type="text" placeholder="Search" id="searchInput">
+    </div>
+    
+    <div class="main-content">
+        <!-- Vue Grille (cours.html) -->
+        <div id="courses-grid-view">
+            <h1>Les Cours Proposés</h1>
+            <p class="description">Un groupe de cours proposés aux étudiants selon la matière et la section.</p>
+            
+            <div class="courses-grid">
+                <!-- Carte Mathématiques Appliquées -->
+                <div class="course-card">
+                    <div class="card-header">Mathématiques Appliquées</div>
+                    <div class="card-body">
+                        <div class="levels-section">
+                            <div class="section-title">Licence</div>
+                            <div class="levels-list">
+                                <div class="level-item"><a href="cours proposé.html?filiere=1-ma">1 MA</a></div>
+                                <div class="level-item"><a href="cours proposé.html?filiere=2-ma">2 MA</a></div>
+                                <div class="level-item"><a href="cours proposé.html?filiere=3-ma">3 MA</a></div>
+                            </div>
+                        </div>
+                        <div class="levels-section">
+                            <div class="section-title">Master</div>
+                            <div class="levels-list">
+                                <div class="level-item"><a href="cours proposé.html?filiere=1-master-ma">Master 1 MA</a></div>
+                                <div class="level-item"><a href="cours proposé.html?filiere=2-master-ma">Master 2 MA</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Carte Ingénierie des Systèmes Informatique -->
+                <div class="course-card">
+                    <div class="card-header">Ingénierie des Systèmes Informatique</div>
+                    <div class="card-body">
+                        <div class="levels-section">
+                            <div class="section-title">Licence</div>
+                            <div class="levels-list">
+                                <div class="level-item"><a href="cours proposé.html?filiere=1-isi">1 ISI</a></div>
+                                <div class="level-item"><a href="cours proposé.html?filiere=2-isi">2 ISI</a></div>
+                                <div class="level-item"><a href="cours proposé.html?filiere=3-isi">3 ISI</a></div>
+                            </div>
+                        </div>
+                        <div class="levels-section">
+                            <div class="section-title">Master</div>
+                            <div class="levels-list">
+                                <div class="level-item"><a href="cours proposé.html?filiere=1-master-assir">Master 1 ASSIR</a></div>
+                                <div class="level-item"><a href="cours proposé.html?filiere=2-master-assir">Master 2 ASSIR</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Carte Sciences Informatique -->
+                <div class="course-card">
+                    <div class="card-header">Sciences Informatique</div>
+                    <div class="card-body">
+                        <div class="levels-section">
+                            <div class="section-title">Licence</div>
+                            <div class="levels-list">
+                                <div class="level-item"><a href="cours proposé.html?filiere=1-si">1 SI</a></div>
+                                <div class="level-item"><a href="cours proposé.html?filiere=2-si">2 SI</a></div>
+                                <div class="level-item"><a href="cours proposé.html?filiere=3-si">3 SI</a></div>
+                            </div>
+                        </div>
+                        <div class="levels-section">
+                            <div class="section-title">Master Recherche</div>
+                            <div class="levels-list">
+                                <div class="level-item"><a href="cours proposé.html?filiere=1-mr-ds">MR DS 1</a></div>
+                                <div class="level-item"><a href="cours proposé.html?filiere=2-mr-ds">MR DS 2</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="more-button" onclick="alert('De nouveaux cours et fonctionnalités seront disponibles prochainement!')">Plus bientôt...</button>
+        </div>
+
+        <!-- Vue Détails (cours proposé.html) -->
+        <div id="courses-detail-view">
+            <h1 id="detail-title">Détails des Cours</h1>
+            
+            <div class="courses-container" id="courses-detail-content">
+                <!-- Le contenu sera généré dynamiquement par JavaScript -->
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Données des matières par filière
+        const matieresParFiliere = {
+            '1-ma': [
+                "Mathématiques Appliquées",
+                "Algorithmique",
+                "Bases de données",
+                "Programmation C",
+                "Systèmes d'information",
+                "Anglais technique"
+            ],
+            '2-ma': [
+                "Analyse numérique",
+                "Probabilités et statistiques",
+                "Recherche opérationnelle",
+                "Programmation Python",
+                "Bases de données avancées",
+                "Anglais scientifique"
+            ],
+            '3-ma': [
+                "Modélisation mathématique",
+                "Théorie des graphes",
+                "Data Science",
+                "Optimisation",
+                "Projet de fin d'études"
+            ],
+            '1-isi': [
+                "Algorithmique et programmation",
+                "Architecture des ordinateurs",
+                "Mathématiques discrètes",
+                "Systèmes d'exploitation",
+                "Bases de données",
+                "Anglais technique"
+            ],
+            '2-isi': [
+                "Système sur puce (SoC) & Technologies d'interfaçage",
+                "Conception des circuits logiques & Synthèse VHDL",
+                "Développement mobile",
+                "Programmation web",
+                "Tests de logiciels (Certification ISTQB)",
+                "Anglais",
+                "Sécurité informatique"
+            ],
+            '3-isi': [
+                "Intelligence Artificielle",
+                "Big Data",
+                "Cloud Computing",
+                "Réseaux avancés",
+                "Sécurité informatique",
+                "Projet de fin d'études"
+            ],
+            '1-si': [
+                "Introduction aux SI",
+                "Bases de données",
+                "Réseaux informatiques",
+                "Programmation Java",
+                "Gestion de projet",
+                "Anglais technique"
+            ],
+            '2-si': [
+                "Analyse et conception des SI",
+                "Développement d'applications d'entreprise",
+                "Bases de données avancées",
+                "Réseaux et sécurité",
+                "Gestion de projet informatique",
+                "Anglais technique"
+            ],
+            '3-si': [
+                "Business Intelligence",
+                "Gouvernance des SI",
+                "Cloud Computing",
+                "Management des SI",
+                "Projet de fin d'études"
+            ],
+            '1-master-ma': [
+                "Mathématiques avancées",
+                "Modélisation statistique",
+                "Analyse numérique",
+                "Recherche opérationnelle",
+                "Séminaire de recherche"
+            ],
+            '2-master-ma': [
+                "Théorie des graphes",
+                "Optimisation combinatoire",
+                "Data Science",
+                "Mémoire de master"
+            ],
+            '1-master-assir': [
+                "Sécurité des réseaux",
+                "Cryptographie",
+                "Forensique numérique",
+                "Droit informatique",
+                "Séminaire de recherche"
+            ],
+            '2-master-assir': [
+                "Sécurité cloud",
+                "Pentesting avancé",
+                "Gestion des risques",
+                "Mémoire de master"
+            ],
+            '1-mr-ds': [
+                "Fondements du Data Science",
+                "Machine Learning",
+                "Big Data Technologies",
+                "Visualisation de données",
+                "Séminaire de recherche"
+            ],
+            '2-mr-ds': [
+                "Deep Learning",
+                "Traitement du langage naturel",
+                "Projet Data Science",
+                "Mémoire de recherche"
+            ]
+        };
+
+        // Données des chapitres par matière
+        const chapitresParMatiere = {
+            // MA
+            "Mathématiques Appliquées": [
+                "Algèbre linéaire",
+                "Calcul différentiel",
+                "Intégration"
+            ],
+            "Analyse numérique": [
+                "Méthodes itératives",
+                "Interpolation polynomiale",
+                "Intégration numérique"
+            ],
+            "Probabilités et statistiques": [
+                "Variables aléatoires",
+                "Lois de probabilité",
+                "Tests d'hypothèses"
+            ],
+            
+            // ISI
+            "Conception des circuits logiques & Synthèse VHDL": [
+                "Synthèse des circuits logiques",
+                "Structure d'une description VHDL",
+                "VHDL en Logique Combinatoire"
+            ],
+            "Système sur puce (SoC) & Technologies d'interfaçage": [
+                "Introduction aux système embarqués",
+                "Systèmes sur puce (SoC)",
+                "Architecture de l'ensemble",
+                "Jeux d'instructions ARM"
+            ],
+            "Programmation web": [
+                "HTML5 & CSS3",
+                "JavaScript moderne",
+                "PHP"
+            ],
+            
+            // SI
+            "Analyse et conception des SI": [
+                "UML avancé",
+                "Patrons de conception",
+                "Modélisation des processus métiers"
+            ],
+            "Développement d'applications d'entreprise": [
+                "Architecture JEE",
+                "Spring Framework",
+                "Microservices"
+            ],
+            "Bases de données avancées": [
+                "Optimisation des requêtes",
+                "NoSQL",
+                "Data Warehousing"
+            ]
+        };
+
+        // Récupération du paramètre de filière dans l'URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const filiere = urlParams.get('filiere');
+        
+        // Fonction pour générer le contenu détaillé
+        function genererContenuDetaille(filiere) {
+            if (filiere && matieresParFiliere[filiere]) {
+                const titreFiliere = filiere.toUpperCase();
+                document.getElementById('detail-title').textContent = `Détails des Cours - ${titreFiliere}`;
+                
+                const mainContent = document.getElementById('courses-detail-content');
+                mainContent.innerHTML = matieresParFiliere[filiere].map(matiere => {
+                    const chapitres = chapitresParMatiere[matiere] || ["Chapitre 1", "Chapitre 2", "Chapitre 3"];
+                    return `
+                        <div class="course-card-detailed">
+                            <h3 class="course-title">${matiere}</h3>
+                            <ul class="chapters-list">
+                                ${chapitres.map(chapitre => `
+                                    <li class="chapter-item">
+                                        <a href="pdf/${matiere.replace(/ /g, '_')}_${chapitre.replace(/ /g, '_')}.pdf" target="_blank" class="chapter-link">${chapitre}</a>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        // Afficher la vue détaillée
+        function showCourseDetails(filiere) {
+            document.getElementById('courses-grid-view').style.display = 'none';
+            document.getElementById('courses-detail-view').style.display = 'block';
+            genererContenuDetaille(filiere);
+            
+            // Fonctionnalité de recherche
+            document.getElementById('searchInput').addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const cards = document.querySelectorAll('.course-card-detailed');
+                
+                cards.forEach(card => {
+                    const title = card.querySelector('.course-title').textContent.toLowerCase();
+                    const chapters = card.querySelectorAll('.chapter-link');
+                    let hasMatch = title.includes(searchTerm);
+                    
+                    chapters.forEach(chapter => {
+                        const chapterText = chapter.textContent.toLowerCase();
+                        if (chapterText.includes(searchTerm)) {
+                            hasMatch = true;
+                            chapter.style.fontWeight = 'bold';
+                        } else {
+                            chapter.style.fontWeight = 'normal';
+                        }
+                    });
+                    
+                    card.style.display = hasMatch ? 'block' : 'none';
+                });
+            });
+        }
+
+        // Gestion de l'historique
+        window.addEventListener('popstate', function() {
+            if (!window.location.href.includes('filiere=')) {
+                document.getElementById('courses-grid-view').style.display = 'block';
+                document.getElementById('courses-detail-view').style.display = 'none';
+            }
+        });
+
+        // Au chargement de la page
+        if (filiere) {
+            showCourseDetails(filiere);
+        } else {
+            document.getElementById('courses-grid-view').style.display = 'block';
+            document.getElementById('courses-detail-view').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

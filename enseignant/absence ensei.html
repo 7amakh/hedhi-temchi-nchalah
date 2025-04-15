@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marquage des Présences - Enseignant</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        /* Styles du header modifiés */
+        header {
+            background-color: #6a5acd;
+            height: 60px;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            color: white;
+        }
+
+        .back-button:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+            transform: translateX(-3px);
+        }
+
+        .back-button img {
+            width: 32px;
+            height: 32px;
+            filter: brightness(0) invert(1);
+        }
+
+        .back-button span {
+            font-size: 1.1em;
+            font-weight: 500;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin: 20px auto;
+            width: 90%;
+            max-width: 800px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin: 25px 0;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding: 15px;
+            background-color: #e8f4fd;
+            border-radius: 8px;
+            flex-wrap: wrap;
+        }
+
+        select, input, button {
+            padding: 10px 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .presence-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .presence-table th, .presence-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .presence-table th {
+            background-color: #3498db;
+            color: white;
+            position: sticky;
+            top: 0;
+        }
+
+        .presence-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .presence-table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .presence-btn {
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-weight: bold;
+            border: none;
+            margin: 0 3px;
+        }
+
+        .present {
+            background-color: #2ecc71;
+            color: white;
+        }
+
+        .absent {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .present-indicator {
+            background-color: #2ecc71;
+        }
+
+        .absent-indicator {
+            background-color: #e74c3c;
+        }
+
+        .summary {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #e8f4fd;
+            border-radius: 8px;
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .stat-card {
+            flex: 1;
+            padding: 15px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="service ensei.html" class="back-button">
+            <img src="../icon/chevron-gauche.png" alt="Retour">
+           
+        </a>
+    </header>
+
+    <div class="container">
+        <h1>Marquage des Présences</h1>
+        
+        <div class="controls">
+            <select id="section-select">
+                <option value="">Sélectionnez une section</option>
+                <option value="1-ma">1-MA</option>
+                <option value="1-isi">1-ISI</option>
+                <option value="2-isi">2-ISI</option>
+                <option value="3-isi">3-ISI</option>
+                <option value="1-si">1-SI</option>
+                <option value="2-si">2-SI</option>
+                <option value="3-si">3-SI</option>
+                <option value="1-master-ma">Master 1 MA</option>
+                <option value="2-master-ma">Master 2 MA</option>
+                <option value="1-master-assir">Master 1 ASSIR</option>
+                <option value="2-master-assir">Master 2 ASSIR</option>
+                <option value="1-mr-ds">MR 1 DS</option>
+                <option value="2-mr-ds">MR 2 DS</option>
+            </select>
+            
+            <select id="matiere-select">
+                <option value="">Sélectionnez une matière</option>
+            </select>
+            
+            <input type="date" id="date-select">
+            
+            <button id="valider-btn">Valider la sélection</button>
+        </div>
+        
+        <table class="presence-table" id="presence-table">
+            <thead>
+                <tr>
+                    <th>N°</th>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="etudiants-list">
+                <!-- Liste des étudiants sera ajoutée ici -->
+            </tbody>
+        </table>
+        
+        <div class="summary">
+            <h3>Résumé de la séance</h3>
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-value" id="total-etudiants">0</div>
+                    <div class="stat-label">Total étudiants</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="total-presents">0</div>
+                    <div class="stat-label">Présents</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="total-absents">0</div>
+                    <div class="stat-label">Absents</div>
+                </div>
+            </div>
+            
+            <button id="enregistrer-btn" style="margin-top: 20px; background-color: #27ae60;">Enregistrer les absences</button>
+        </div>
+    </div>
+
+    <script>
+        // Données des étudiants par section
+        const etudiantsParSection = {
+            '1-ma': [
+                {nom: 'SAIDI', prenom: 'SALAH'},
+                {nom: 'BARHOUMI', prenom: 'CHAIMA'},
+                {nom: 'SAIDI', prenom: 'MOUA'}
+            ],
+            '1-isi': [
+                {nom: 'GAMMOUDI', prenom: 'MOHAMED'},
+                {nom: 'BARHOUMI', prenom: 'MOUNIR'}
+            ],
+            '2-isi': [
+                {nom: 'TLILI', prenom: 'HENI'},
+                {nom: 'JMAL', prenom: 'ANOUAR'},
+                {nom: 'HAMMAMI', prenom: 'ISLEM'},
+                {nom: 'JABNOUNI', prenom: 'BILEL'},
+                {nom: 'BEN AHMED', prenom: 'TAHA'},
+                {nom: 'AOUADI', prenom: 'KHAOULA'},
+                {nom: 'HEMLI', prenom: 'AYOUB'},
+                {nom: 'DHAHRI', prenom: 'SAIEFEDDINE'},
+                {nom: 'AMRI', prenom: 'BILEL'},
+                {nom: 'GHOZZI', prenom: 'JIHED'},
+                {nom: 'KHLIFI', prenom: 'RIHAB'},
+                {nom: 'KHELIFI', prenom: 'MOHAMED'},
+                {nom: 'BALGHOUTHI', prenom: 'KHOULOUD'},
+                {nom: 'CHWAYA', prenom: 'ABDELAZIZ'},
+                {nom: 'GAIEH', prenom: 'NARJES'},
+                {nom: 'OUTAY', prenom: 'GHOFRANE'},
+                {nom: 'DERBALI', prenom: 'AYOUB'},
+                {nom: 'BACCAR', prenom: 'ICHRAK'},
+                {nom: 'TLILI', prenom: 'MAHDI'},
+                {nom: 'ALOUI', prenom: 'MOKHTAR'},
+                {nom: 'ZENATI', prenom: 'MAYEZ'},
+                {nom: 'TOUIL', prenom: 'NESRINE'},
+                {nom: 'BEN HALIMA', prenom: 'MARAM'},
+                {nom: 'BEN RHOUMA', prenom: 'TALEL'},
+                {nom: 'BEN ACHOUR', prenom: 'ZAYNEB'},
+                {nom: 'BEN ALI', prenom: 'MANAR'},
+                {nom: 'DRIDI', prenom: 'MOHAMED'},
+                {nom: 'BEN SLIMENE', prenom: 'SAHAR'},
+                {nom: 'JENNENE', prenom: 'ISKANDER'},
+                {nom: 'LAAMIRI', prenom: 'DOUA'},
+                {nom: 'LAAMIMI', prenom: 'LINDA'},
+                {nom: 'BEN IBRAHIM', prenom: 'MED AIIZ'},
+                {nom: 'SLOUMA', prenom: 'HIBA'},
+                {nom: 'SLEIMI', prenom: 'ROUDAYNA'},
+                {nom: 'BEN HAMIDA', prenom: 'SARAH'},
+                {nom: 'BEN JEMAA', prenom: 'RAHMA'},
+                {nom: 'TARHOUNI', prenom: 'NOURHENE'},
+                {nom: 'BOUSSEMA', prenom: 'SALSABIL'},
+                {nom: 'HAMMAMI', prenom: 'YASMINE'},
+                {nom: 'KSOURI', prenom: 'MOHAMED AZIZ'},
+                {nom: 'AISSA', prenom: 'HIBATALLAH'},
+                {nom: 'BEN MNA', prenom: 'MARAM'},
+                {nom: 'REBAI', prenom: 'AYA'},
+                {nom: 'NAGATTI', prenom: 'NASSIM'},
+                {nom: 'RAWEN', prenom: 'IYED'},
+                {nom: 'BOUDHIR', prenom: 'AMAL'},
+                {nom: 'MEDDEB', prenom: 'HOUSSEM'},
+                {nom: 'KHMIRI', prenom: 'SOFIAN'}
+            ],
+            '3-isi': [
+                {nom: 'SALHI', prenom: 'KARIM'},
+                {nom: 'BOUCHAMAOUI', prenom: 'DALEL'}
+            ],
+            '1-si': [
+                {nom: 'BOUGHANMI', prenom: 'OUSSEMA'},
+                {nom: 'RAJHI', prenom: 'SAFWEN'}
+            ],
+            '2-si': [
+                {nom: 'DHAHBI', prenom: 'MOHAMED'},
+                {nom: 'AWECHRI', prenom: 'KOSSAY'}
+            ],
+            '3-si': [
+                {nom: 'DERBALI', prenom: 'KHADIJA'},
+                {nom: 'OMRI', prenom: 'FAOUZI'}
+            ],
+            '1-master-ma': [
+                {nom: 'BEN ALI', prenom: 'KARIM'},
+                {nom: 'MATRI', prenom: 'JABER'}
+            ],
+            '2-master-ma': [
+                {nom: 'BEN ALI', prenom: 'HAYET'},
+                {nom: 'BEN ROMADHAN', prenom: 'SAMIR'}
+            ],
+            '1-master-assir': [
+                {nom: 'BOUABID', prenom: 'YASSMINE'},
+                {nom: 'LAHDHIRI', prenom: 'KARIM'}
+            ],
+            '2-master-assir': [
+                {nom: 'BOUABID', prenom: 'BASSEM'},
+                {nom: 'JABRI', prenom: 'ACHREF'}
+            ],
+            '1-mr-ds': [
+                {nom: 'BRAHMI', prenom: 'ZOHOUR'},
+                {nom: 'HENI', prenom: 'MOHAMED'}
+            ],
+            '2-mr-ds': [
+                {nom: 'MSAKNI', prenom: 'SALWA'},
+                {nom: 'BARHOUMI', prenom: 'NADA'}
+            ]
+        };
+
+        // Données des matières par section
+        const matieresParSection = {
+            '1-ma': ["Mathématiques Appliquées", "Algorithmique", "Bases de données", "Programmation C", "Systèmes d'information", "Anglais technique"],
+            '1-isi': ["Algorithmique et programmation", "Architecture des ordinateurs", "Mathématiques discrètes", "Systèmes d'exploitation", "Bases de données", "Anglais technique"],
+            '2-isi': ["Système sur puce (SoC) & Technologies d'interfaçage", "Conception des circuits logiques & Synthèse VHDL", "Développement mobile", "Développement mobile TP", "Tests de logiciels (Certification ISTQB)", "Anglais", "Programmation web TP", "Programmation web", "Projet tutoré", "Tests de logiciels", "CLE", "Sécurité informatique TP", "Projet fédéré"],
+            '3-isi': ["Intelligence Artificielle", "Big Data", "Cloud Computing", "Réseaux avancés", "Sécurité informatique", "Projet de fin d'études"],
+            '1-si': ["Introduction aux SI", "Bases de données", "Réseaux informatiques", "Programmation Java", "Gestion de projet", "Anglais technique"],
+            '2-si': ["Administration des SI", "Data Mining", "ERP", "Développement web avancé", "Sécurité des SI", "Projet intégré"],
+            '3-si': ["Business Intelligence", "Gouvernance des SI", "Cloud Computing", "Management des SI", "Projet de fin d'études"],
+            '1-master-ma': ["Mathématiques avancées", "Modélisation statistique", "Analyse numérique", "Recherche opérationnelle", "Séminaire de recherche"],
+            '2-master-ma': ["Théorie des graphes", "Optimisation combinatoire", "Data Science", "Mémoire de master"],
+            '1-master-assir': ["Sécurité des réseaux", "Cryptographie", "Forensique numérique", "Droit informatique", "Séminaire de recherche"],
+            '2-master-assir': ["Sécurité cloud", "Pentesting avancé", "Gestion des risques", "Mémoire de master"],
+            '1-mr-ds': ["Fondements du Data Science", "Machine Learning", "Big Data Technologies", "Visualisation de données", "Séminaire de recherche"],
+            '2-mr-ds': ["Deep Learning", "Traitement du langage naturel", "Projet Data Science", "Mémoire de recherche"]
+        };
+
+        // Variables globales
+        let currentSection = '';
+        let currentMatiere = '';
+        let currentDate = '';
+        let presencesData = {};
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configurer la date d'aujourd'hui par défaut
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('date-select').value = today;
+            document.getElementById('date-select').max = today;
+            currentDate = today;
+
+            // Écouteurs d'événements
+            document.getElementById('section-select').addEventListener('change', function() {
+                currentSection = this.value;
+                updateMatieresDropdown();
+            });
+
+            document.getElementById('matiere-select').addEventListener('change', function() {
+                currentMatiere = this.value;
+            });
+
+            document.getElementById('date-select').addEventListener('change', function() {
+                currentDate = this.value;
+            });
+
+            document.getElementById('valider-btn').addEventListener('click', loadEtudiants);
+            document.getElementById('enregistrer-btn').addEventListener('click', enregistrerPresences);
+        });
+
+        // Mettre à jour la liste des matières en fonction de la section sélectionnée
+        function updateMatieresDropdown() {
+            const matiereSelect = document.getElementById('matiere-select');
+            matiereSelect.innerHTML = '<option value="">Sélectionnez une matière</option>';
+
+            if (currentSection && matieresParSection[currentSection]) {
+                matieresParSection[currentSection].forEach(matiere => {
+                    const option = document.createElement('option');
+                    option.value = matiere;
+                    option.textContent = matiere;
+                    matiereSelect.appendChild(option);
+                });
+            }
+        }
+
+        // Charger la liste des étudiants pour la section sélectionnée
+        function loadEtudiants() {
+            if (!currentSection || !currentMatiere || !currentDate) {
+                alert("Veuillez sélectionner une section, une matière et une date");
+                return;
+            }
+
+            const etudiantsList = document.getElementById('etudiants-list');
+            etudiantsList.innerHTML = '';
+
+            if (etudiantsParSection[currentSection]) {
+                // Initialiser les données de présence
+                presencesData = {
+                    section: currentSection,
+                    matiere: currentMatiere,
+                    date: currentDate,
+                    etudiants: {}
+                };
+
+                etudiantsParSection[currentSection].forEach((etudiant, index) => {
+                    const fullName = `${etudiant.nom} ${etudiant.prenom}`;
+                    
+                    // Par défaut, marquer comme présent
+                    presencesData.etudiants[fullName] = 'P';
+
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${etudiant.nom}</td>
+                        <td>${etudiant.prenom}</td>
+                        <td>
+                            <span class="status-indicator present-indicator"></span>
+                            Présent
+                        </td>
+                        <td>
+                            <button class="presence-btn present" onclick="markPresence(this, '${fullName}', 'P')">P</button>
+                            <button class="presence-btn absent" onclick="markPresence(this, '${fullName}', 'A')">A</button>
+                        </td>
+                    `;
+                    etudiantsList.appendChild(row);
+                });
+
+                updateSummary();
+            }
+        }
+
+        // Marquer la présence/absence d'un étudiant
+        function markPresence(button, etudiant, statut) {
+            // Mettre à jour les données
+            presencesData.etudiants[etudiant] = statut;
+
+            // Mettre à jour l'affichage
+            const row = button.closest('tr');
+            const statusCell = row.querySelector('td:nth-child(4)');
+            
+            if (statut === 'P') {
+                statusCell.innerHTML = `
+                    <span class="status-indicator present-indicator"></span>
+                    Présent
+                `;
+            } else {
+                statusCell.innerHTML = `
+                    <span class="status-indicator absent-indicator"></span>
+                    Absent
+                `;
+            }
+
+            updateSummary();
+        }
+
+        // Mettre à jour le résumé
+        function updateSummary() {
+            const total = Object.keys(presencesData.etudiants || {}).length;
+            const presents = Object.values(presencesData.etudiants || {}).filter(s => s === 'P').length;
+            const absents = total - presents;
+
+            document.getElementById('total-etudiants').textContent = total;
+            document.getElementById('total-presents').textContent = presents;
+            document.getElementById('total-absents').textContent = absents;
+        }
+
+        // Enregistrer les présences
+        function enregistrerPresences() {
+            if (!currentSection || !currentMatiere || !currentDate || !presencesData.etudiants) {
+                alert("Veuillez d'abord charger une liste d'étudiants");
+                return;
+            }
+
+            // Retrieve existing absences or initialize
+            let allAbsences = JSON.parse(localStorage.getItem('absences')) || {};
+
+            // Create a unique key with encoded components
+            const sessionKey = `${encodeURIComponent(currentSection)}|${encodeURIComponent(currentMatiere)}|${currentDate}`;
+
+            // Save only absences (not presences)
+            const absencesForSession = {};
+            for (const [etudiant, statut] of Object.entries(presencesData.etudiants)) {
+                if (statut === 'A') {
+                    absencesForSession[etudiant] = true;
+                }
+            }
+
+            // Add new absences
+            allAbsences[sessionKey] = absencesForSession;
+
+            // Save to localStorage
+            localStorage.setItem('absences', JSON.stringify(allAbsences));
+
+            // Dispatch the custom event
+            const event = new Event('absencesUpdated');
+            window.dispatchEvent(event);
+
+            alert("Les absences ont été enregistrées avec succès!");
+        }
+
+        // Exposer la fonction markPresence globalement
+        window.markPresence = markPresence;
+        </script>
+</body>
+</html>

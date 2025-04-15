@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espace de notes: Administration</title>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 70px 1fr auto;
+        }
+
+        .sidebar {
+            background-color: #6a5acd;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+
+        .profile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .profile img {
+            width: 30px;
+            height: 30px;
+            filter: brightness(0) invert(1);
+        }
+
+        .main-content {
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+
+        .search-bar {
+            width: 300px;
+            margin-bottom: 20px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin: 0 0 25px 0;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: white;
+        }
+
+        .file-upload {
+            border: 2px dashed #ddd;
+            border-radius: 4px;
+            padding: 25px;
+            text-align: center;
+            cursor: pointer;
+            margin: 15px 0;
+            background-color: #f9f9f9;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        .image-container {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8f9fa;
+            border-left: 1px solid #ddd;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            max-height: 90vh;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 1024px) {
+            body {
+                grid-template-columns: 70px 1fr;
+            }
+            .image-container {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                grid-template-columns: 1fr;
+                padding-left: 0;
+            }
+            .sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="profile">
+            <a href="index admin.html" id="home"><img src="../icon/maison.png" alt="Home"></a>
+            <a href="message admin.html" id="home"><img src="../icon/enveloppe.png" alt="Messages"></a>
+            <a href="formation admin.html" id="home"><img src="../icon/salle-de-classe.png" alt="Messages"></a>
+            <a href="voir note 1.html"><img src=../icon/acces-autorise.png alt="access"></a>
+            <a href="#" id="home"><img src="../icon/editer.png" alt="Notes"></a>
+            <a href="about admin.html" id="about"><img src="../icon/exclamation.png" alt="À propos"></a>
+            <a href="../index.html" id="home"><img src="../icon/logout.png" alt="Déconnexion"></a>
+        </div>
+    </div>
+
+
+        <div class="container">
+            <h1>Espace de notes: Administration</h1>
+            
+            <!-- Première liste déroulante - Section -->
+            <div class="form-group">
+                <select id="section-select">
+                    <option value="" disabled selected>Choisir une section</option>
+                    <option value="isi">ISI (Informatique et Systèmes d'Information)</option>
+                    <option value="si">SI (Sciences de l'Ingénieur)</option>
+                    <option value="ma">MA (Mathématiques Appliquées)</option>
+                </select>
+            </div>
+
+            <!-- Deuxième liste déroulante - Niveau -->
+            <div class="form-group">
+                <select id="niveau-select">
+                    <option value="" disabled selected>Choisir un niveau</option>
+                    <option value="1">Niveau 1</option>
+                    <option value="2">Niveau 2</option>
+                    <option value="3">Niveau 3</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <input type="text" id="student-email" placeholder="Email de l'étudiant" required>
+            </div>
+            <div class="file-upload">
+                <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.xls,.xlsx" hidden>
+                <div id="fileText">Télécharger le relevé de notes</div>
+                <div id="fileSubtext" style="color: #888; font-size: 14px;">Formats acceptés: PDF, Word, Excel</div>
+            </div>
+
+            <button type="button" id="envoyer-btn">Enregistrer la note</button>
+        </div>
+    </div>
+
+    <!-- Image à droite -->
+    <div class="image-container">
+        <img src="../image/360_F_487646871_ZbTenzGoWwRxPJF8VycAyOZagk2Wp6bX.png" alt="Interface administration des notes">
+    </div>
+
+    <script>
+        // Initialize Firebase FIRST
+        const firebaseConfig = {
+        apiKey: "AIzaSyCkq5qr5sA0Q63tzggfS4GS2_hFVvyXnUw",
+        authDomain: "universityportal-ee6a7.firebaseapp.com",
+        projectId: "universityportal-ee6a7",
+        storageBucket: "universityportal-ee6a7.firebasestorage.app",
+        messagingSenderId: "799224011090",
+        appId: "1:799224011090:web:11082b9b61c89fe4a2028b"
+        };
+
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // DOM Elements
+        const sectionSelect = document.getElementById('section-select');
+        const niveauSelect = document.getElementById('niveau-select');
+        const studentEmailInput = document.getElementById('student-email'); // Corrected ID
+        const fileInput = document.getElementById('fileInput');
+        const envoyerBtn = document.getElementById('envoyer-btn'); // This must exist
+    
+
+        // Gestion du téléchargement de fichier
+        document.querySelector('.file-upload').addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', function(e) {
+            const fileText = document.getElementById('fileText');
+            const fileSubtext = document.getElementById('fileSubtext');
+            
+            if(e.target.files.length > 0) {
+                fileText.textContent = e.target.files[0].name;
+                fileSubtext.textContent = 'Cliquez pour modifier le fichier';
+            } else {
+                fileText.textContent = 'Télécharger le relevé de notes';
+                fileSubtext.textContent = 'Formats acceptés: PDF, Word, Excel';
+            }
+        });
+        
+        
+        
+
+        // Gestion de l'envoi
+        envoyerBtn.addEventListener('click', function() {
+    const section = sectionSelect.value;
+    const niveau = niveauSelect.value;
+    const studentEmail = document.getElementById('student-email').value;
+    const file = fileInput.files[0];
+
+    // Validation simplifiée
+    if (!section || !niveau || !studentEmail || !file) {
+        alert("Veuillez remplir tous les champs et sélectionner un fichier.");
+        return;
+    }
+
+    // Convertir le fichier en Base64 pour le stockage
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const noteData = {
+            section: sectionSelect.options[sectionSelect.selectedIndex].text,
+            niveau: niveauSelect.options[niveauSelect.selectedIndex].text,
+            studentEmail,
+            fileName: file.name,
+            fileContent: e.target.result, // Contenu en Base64
+            date: new Date().toLocaleString('fr-FR'),
+            statut: 'Enregistrée'
+        };
+
+        // Enregistrer dans localStorage avec l'email comme clé
+        localStorage.setItem(`note_${studentEmail}`, JSON.stringify(noteData));
+        alert("Relevé enregistré avec succès !");
+        
+        // Réinitialiser le formulaire
+        fileInput.value = "";
+        document.getElementById('fileText').textContent = 'Télécharger le relevé de notes';
+        document.getElementById('fileSubtext').textContent = 'Formats acceptés: PDF, Word, Excel';
+    };
+    reader.readAsDataURL(file);
+});
+        
+    </script>
+</body>
+</html>

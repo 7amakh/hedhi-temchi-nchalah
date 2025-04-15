@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Notes </title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            background-color: #f5f6fa;
+        }
+
+        .top-bar {
+            background-color: #6a5acd;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .back-arrow {
+            display: inline-block;
+            padding: 5px;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+            margin-right: 15px;
+        }
+
+        .back-arrow:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .back-arrow img {
+            width: 24px;
+            height: 24px;
+            filter: brightness(0) invert(1);
+        }
+
+        .container {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1400px;
+            margin: 20px auto;
+        }
+
+        .section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            flex: 1;
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        select, input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin-top: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            position: sticky;
+            top: 0;
+        }
+
+        button {
+            background-color: #6a5acd;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #6a5acd;
+        }
+
+        .access-list tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .revoke-btn {
+            background-color: #e74c3c;
+            padding: 4px 8px;
+            font-size: 0.9em;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f6fa;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            padding-left: 70px; /* Ajout pour la sidebar */
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 70px;
+            background-color: #6a5acd;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 0;
+            z-index: 1000;
+        }
+
+        .profile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1rem 0;
+        }
+
+        .profile img {
+            width: 30px;
+            height: 30px;
+        }
+
+        .pro {
+            border-radius: 40%;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="profile">
+            <a href="../index/profile.html"><img src="../image/image.jpg" class="pro" alt="Profile Icon"></a>
+            <a href="index admin.html"><img src="../icon/maison.png" alt="Accueil"></a>
+            <a href="message admin.html"><img src="../icon/enveloppe.png" alt="Messages"></a>
+            <a href="formation admin.html"><img src="../icon/salle-de-classe.png" alt="Formations"></a>
+            <a href="#"><img src=../icon/acces-autorise.png alt="access"></a>
+            <a href="note admin.html"><img src="../icon/editer.png" alt="Notes"></a>
+            <a href="about admin.html"><img src="../icon/exclamation.png" alt="À propos"></a>
+            <a href="../index.html"><img src="../icon/logout.png" alt="Déconnexion"></a>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Section Notes -->
+        <div class="section">
+            <h2>Gestion des Notes</h2>
+            <div class="filters">
+                <div class="filter-group">
+                    <label>Section :</label>
+                    <select id="sectionFilter" onchange="updateLevels()">
+                        <option value="">Toutes les sections</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Niveau :</label>
+                    <select id="levelFilter" onchange="updateSubjects()">
+                        <option value="">Tous les niveaux</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Matière :</label>
+                    <select id="subjectFilter">
+                        <option value="">Toutes les matières</option>
+                    </select>
+                </div>
+                
+                <button onclick="loadGrades()">Actualiser</button>
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Étudiant</th>
+                        <th>TP (10%)</th>
+                        <th>DS (20%)</th>
+                        <th>Examen (70%)</th>
+                        <th>Final</th>
+                    </tr>
+                </thead>
+                <tbody id="gradesBody"></tbody>
+            </table>
+        </div>
+
+        <!-- Section Accès -->
+        <div class="section">
+            <h2>Gestion des Accès</h2>
+            <div class="filters">
+                <div class="filter-group">
+                    <label>Enseignant :</label>
+                    <select id="teacherSelect">
+                        <option value="1"> M. Gammoudi</option>
+                        <option value="2"> Mme. Ben Ali</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Section :</label>
+                    <select id="accessSection" onchange="updateAccessLevels()">
+                        <option value="">Sélectionner...</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Niveau :</label>
+                    <select id="accessLevel" onchange="updateAccessSubjects()">
+                        <option value="">Sélectionner...</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Matière :</label>
+                    <select id="accessSubject">
+                        <option value="">Sélectionner...</option>
+                    </select>
+                </div>
+                
+                <button onclick="grantAccess()"> Accorder Accès</button>
+            </div>
+            
+            <table class="access-list">
+                <thead>
+                    <tr>
+                        <th>Enseignant</th>
+                        <th>Section</th>
+                        <th>Niveau</th>
+                        <th>Matière</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="accessList"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Données initiales
+        const etudiantsParSection = {
+            '1-ma': [
+                {id:1, nom: 'SAIDI', prenom: 'SALAH'},
+                {id:2, nom: 'BARHOUMI', prenom: 'CHAIMA'},
+                {id:3, nom: 'SAIDI', prenom: 'MOUA'}
+            ],
+            '2-ma': [],
+            '3-ma': [],
+            '1-isi': [
+                {id:4, nom: 'GAMMOUDI', prenom: 'MOHAMED'},
+                {id:5, nom: 'BARHOUMI', prenom: 'MOUNIR'}
+            ],
+            '2-isi': [
+            {id:6, nom: 'TLILI', prenom: 'HENI'},
+            {id:7, nom: 'JMAL', prenom: 'ANOUAR'},
+            {id:8, nom: 'HAMMAMI', prenom: 'ISLEM'},
+            {id:9, nom: 'JABNOUNI', prenom: 'BILEL'},
+            {id:10, nom: 'BEN AHMED', prenom: 'TAHA'},
+            {id:11, nom: 'AOUADI', prenom: 'KHAOULA'},
+            {id:12, nom: 'HEMLI', prenom: 'AYOUB'},
+            {id:13, nom: 'DHAHRI', prenom: 'SAIEFEDDINE'},
+            {id:14, nom: 'AMRI', prenom: 'BILEL'},
+            {id:15, nom: 'GHOZZI', prenom: 'JIHED'},
+            {id:16, nom: 'KHLIFI', prenom: 'RIHAB'},
+            {id:17, nom: 'KHELIFI', prenom: 'MOHAMED'},
+            {id:18, nom: 'BALGHOUTHI', prenom: 'KHOULOUD'},
+            {id:19, nom: 'CHWAYA', prenom: 'ABDELAZIZ'},
+            {id:20, nom: 'GAIEH', prenom: 'NARJES'},
+            {id:21, nom: 'OUTAY', prenom: 'GHOFRANE'},
+            {id:22, nom: 'DERBALI', prenom: 'AYOUB'},
+            {id:23, nom: 'BACCAR', prenom: 'ICHRAK'},
+            {id:24, nom: 'TLILI', prenom: 'MAHDI'},
+            {id:25, nom: 'ALOUI', prenom: 'MOKHTAR'},
+            {id:26, nom: 'ZENATI', prenom: 'MAYEZ'},
+            {id:27, nom: 'TOUIL', prenom: 'NESRINE'},
+            {id:28, nom: 'BEN HALIMA', prenom: 'MARAM'},
+            {id:29, nom: 'BEN RHOUMA', prenom: 'TALEL'},
+            {id:30, nom: 'BEN ACHOUR', prenom: 'ZAYNEB'},
+            {id:31, nom: 'BEN ALI', prenom: 'MANAR'},
+            {id:32, nom: 'DRIDI', prenom: 'MOHAMED'},
+            {id:33, nom: 'BEN SLIMENE', prenom: 'SAHAR'},
+            {id:34, nom: 'JENNENE', prenom: 'ISKANDER'},
+            {id:35, nom: 'LAAMIRI', prenom: 'DOUA'},
+            {id:36, nom: 'LAAMIMI', prenom: 'LINDA'},
+            {id:37, nom: 'BEN IBRAHIM', prenom: 'MED AIIZ'},
+            {id:38, nom: 'SLOUMA', prenom: 'HIBA'},
+            {id:39, nom: 'SLEIMI', prenom: 'ROUDAYNA'},
+            {id:40, nom: 'BEN HAMIDA', prenom: 'SARAH'},
+            {id:41, nom: 'BEN JEMAA', prenom: 'RAHMA'},
+            {id:42, nom: 'TARHOUNI', prenom: 'NOURHENE'},
+            {id:43, nom: 'BOUSSEMA', prenom: 'SALSABIL'},
+            {id:44, nom: 'HAMMAMI', prenom: 'YASMINE'},
+            {id:45, nom: 'KSOURI', prenom: 'MOHAMED AZIZ'},
+            {id:46, nom: 'AISSA', prenom: 'HIBATALLAH'},
+            {id:47, nom: 'BEN MNA', prenom: 'MARAM'},
+            {id:48, nom: 'REBAI', prenom: 'AYA'},
+            {id:49, nom: 'NAGATTI', prenom: 'NASSIM'},
+            {id:50, nom: 'RAWEN', prenom: 'IYED'},
+            {id:51, nom: 'BOUDHIR', prenom: 'AMAL'},
+            {id:52, nom: 'MEDDEB', prenom: 'HOUSSEM'},
+            {id:53, nom: 'KHMIRI', prenom: 'SOFIAN'}
+            ],
+            '3-isi': [
+                {id:54, nom: 'SALHI', prenom: 'KARIM'},
+                {id:55, nom: 'BOUCHAMAOUI', prenom: 'DALEL'}
+            ],
+            '1-si': [
+                {id:56, nom: 'BOUGHANMI', prenom: 'OUSSEMA'},
+                {id:57, nom: 'RAJHI', prenom: 'SAFWEN'}
+            ],
+            '2-si': [
+                {id:58, nom: 'DHAHBI', prenom: 'MOHAMED'},
+                {id:59, nom: 'AWECHRI', prenom: 'KOSSAY'}
+            ],
+            '3-si': [
+                {id:60, nom: 'DERBALI', prenom: 'KHADIJA'},
+                {id:61, nom: 'OMRI', prenom: 'FAOUZI'}
+            ],
+            '1-master-ma': [
+                {id:62, nom: 'BEN ALI', prenom: 'KARIM'},
+                {id:63, nom: 'MATRI', prenom: 'JABER'}
+            ],
+            '2-master-ma': [
+                {id:64, nom: 'BEN ALI', prenom: 'HAYET'},
+                {id:65, nom: 'BEN ROMADHAN', prenom: 'SAMIR'}
+            ],
+            '1-master-assir': [
+                {id:66, nom: 'BOUABID', prenom: 'YASSMINE'},
+                {id:67, nom: 'LAHDHIRI', prenom: 'KARIM'}
+            ],
+            '2-master-assir': [
+                {id:68, nom: 'BOUABID', prenom: 'BASSEM'},
+                {id:69, nom: 'JABRI', prenom: 'ACHREF'}
+            ],
+            '1-mr-ds': [
+                {id:70, nom: 'BRAHMI', prenom: 'ZOHOUR'},
+                {id:71, nom: 'HENI', prenom: 'MOHAMED'}
+            ],
+            '2-mr-ds': [
+                {id:72, nom: 'MSAKNI', prenom: 'SALWA'},
+                {id:73, nom: 'BARHOUMI', prenom: 'NADA'}
+            ]
+        };
+
+        const matieresParSection = {
+            "isi": {
+                "1": {
+                    nom: "1ère année ISI",
+                    matieres: [
+                        { nom: "Algorithmique et programmation" },
+                        { nom: "Architecture des ordinateurs" },
+                        { nom: "Mathématiques discrètes" },
+                        { nom: "Systèmes d'exploitation" },
+                        { nom: "Bases de données" }
+                    ]
+                },
+                "2": {
+                    nom: "2ème année ISI",
+                    matieres: [
+                        { nom: "Conception des circuits logiques" },
+                        { nom: "Système sur puce (SoC)" },
+                        { nom: "Programmation web" },
+                        { nom: "Programmation mobile" },
+                        { nom: "Tests de logiciels" }
+                    ]
+                },
+                "3": {
+                    nom: "3ème année ISI",
+                    matieres: [
+                        { nom: "Intelligence Artificielle" },
+                        { nom: "Big Data" },
+                        { nom: "Cloud Computing" },
+                        { nom: "Réseaux avancés" }
+                    ]
+                }
+            },
+            "si": {
+                "1": {
+                    nom: "1ère année SI",
+                    matieres: [
+                        { nom: "Introduction aux SI" },
+                        { nom: "Bases de données" },
+                        { nom: "Réseaux informatiques" },
+                        { nom: "Programmation Java" }
+                    ]
+                },
+                "2": {
+                    nom: "2ème année SI",
+                    matieres: [
+                        { nom: "Analyse des SI" },
+                        { nom: "Développement d'applications" },
+                        { nom: "Bases de données avancées" },
+                        { nom: "Réseaux et sécurité" }
+                    ]
+                },
+                "3": {
+                    nom: "3ème année SI",
+                    matieres: [
+                        { nom: "Business Intelligence" },
+                        { nom: "Gouvernance des SI" },
+                        { nom: "Cloud Computing" }
+                    ]
+                }
+            },
+            "ma": {
+                "1": {
+                    nom: "1ère année MA",
+                    matieres: [
+                        { nom: "Mathématiques Appliquées" },
+                        { nom: "Algorithmique" },
+                        { nom: "Bases de données" },
+                        { nom: "Programmation C" }
+                    ]
+                },
+                "2": {
+                    nom: "2ème année MA",
+                    matieres: [
+                        { nom: "Analyse numérique" },
+                        { nom: "Probabilités" },
+                        { nom: "Recherche opérationnelle" },
+                        { nom: "Programmation Python" }
+                    ]
+                },
+                "3": {
+                    nom: "3ème année MA",
+                    matieres: [
+                        { nom: "Modélisation mathématique" },
+                        { nom: "Théorie des graphes" },
+                        { nom: "Data Science" }
+                    ]
+                }
+            },
+            "master-ma": {
+                "1": {
+                    nom: "Master 1 MA",
+                    matieres: [
+                        { nom: "Analyse avancée" },
+                        { nom: "Optimisation" },
+                        { nom: "Modélisation mathématique" }
+                    ]
+                },
+                "2": {
+                    nom: "Master 2 MA",
+                    matieres: [
+                        { nom: "Recherche opérationnelle avancée" },
+                        { nom: "Statistiques avancées" },
+                        { nom: "Théorie des jeux" }
+                    ]
+                }
+            },
+            "master-assir": {
+                "1": {
+                    nom: "Master 1 ASSIR",
+                    matieres: [
+                        { nom: "Architecture des SI" },
+                        { nom: "Sécurité informatique" },
+                        { nom: "Cloud Computing" }
+                    ]
+                },
+                "2": {
+                    nom: "Master 2 ASSIR",
+                    matieres: [
+                        { nom: "Gouvernance des SI" },
+                        { nom: "Audit des SI" },
+                        { nom: "Big Data" }
+                    ]
+                }
+            },
+            "mr-ds": {
+                "1": {
+                    nom: "MR Data Science 1",
+                    matieres: [
+                        { nom: "Fondements de Data Science" },
+                        { nom: "Machine Learning" },
+                        { nom: "Visualisation des données" }
+                    ]
+                },
+                "2": {
+                    nom: "MR Data Science 2",
+                    matieres: [
+                        { nom: "Deep Learning" },
+                        { nom: "Big Data Technologies" },
+                        { nom: "Projet Data Science" }
+                    ]
+                }
+            }
+        };
+
+        let teacherAccess = JSON.parse(localStorage.getItem('teacherAccess')) || [];
+        let notes = JSON.parse(localStorage.getItem('notes')) || {};
+
+        // Initialisation des filtres
+        function initializeFilters() {
+            const sections = ['isi', 'si', 'ma', 'master-ma', 'master-assir', 'mr-ds'];
+            const sectionFilter = document.getElementById('sectionFilter');
+            const accessSection = document.getElementById('accessSection');
+
+            sections.forEach(section => {
+                [sectionFilter, accessSection].forEach(select => {
+                    const option = document.createElement('option');
+                    option.value = section;
+                    option.textContent = section.toUpperCase();
+                    select.appendChild(option);
+                });
+            });
+        }
+
+        // Mise à jour dynamique des niveaux
+        function updateLevels() {
+            const section = document.getElementById('sectionFilter').value;
+            const levelSelect = document.getElementById('levelFilter');
+            
+            levelSelect.innerHTML = '<option value="">Tous les niveaux</option>';
+            
+            if (section && matieresParSection[section]) {
+                Object.keys(matieresParSection[section]).forEach(level => {
+                    const option = document.createElement('option');
+                    option.value = level;
+                    option.textContent = `Niveau ${level}`;
+                    levelSelect.appendChild(option);
+                });
+            }
+            
+            updateSubjects();
+        }
+
+        // Mise à jour dynamique des matières
+        function updateSubjects() {
+            const section = document.getElementById('sectionFilter').value;
+            const level = document.getElementById('levelFilter').value;
+            const subjectSelect = document.getElementById('subjectFilter');
+            
+            subjectSelect.innerHTML = '<option value="">Toutes les matières</option>';
+            
+            if (section && level && matieresParSection[section]?.[level]) {
+                matieresParSection[section][level].matieres.forEach(matiere => {
+                    const option = document.createElement('option');
+                    option.value = matiere.nom;
+                    option.textContent = matiere.nom;
+                    subjectSelect.appendChild(option);
+                });
+            }
+        }
+
+        // Chargement des notes
+        function loadGrades() {
+            const section = document.getElementById('sectionFilter').value;
+            const level = document.getElementById('levelFilter').value;
+            const subject = document.getElementById('subjectFilter').value;
+            const tbody = document.getElementById('gradesBody');
+            tbody.innerHTML = '';
+        
+            if (!section || !level || !subject) return;
+        
+            const sectionKey = `${section}-${level}-${subject}`; // Clé corrigée
+            const storedNotes = JSON.parse(localStorage.getItem('notes')) || {};
+            const notesForSection = storedNotes[sectionKey] || {};
+        
+            const etudiants = etudiantsParSection[`${level}-${section}`] || [];
+        
+            etudiants.forEach(etudiant => {
+                const noteData = notesForSection[etudiant.id] || { tp: '', ds: '', exam: '' };
+                
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${etudiant.id}</td>
+                    <td>${etudiant.nom} ${etudiant.prenom}</td>
+                    <td><input type="number" value="${noteData.tp}" readonly></td>
+                    <td><input type="number" value="${noteData.ds}" readonly></td>
+                    <td><input type="number" value="${noteData.exam}" readonly></td>
+                    <td>${calculateFinal(noteData)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function calculateFinal(note) {
+            if(!note.tp || !note.ds || !note.examen) return '-';
+            const final = (note.tp * 0.3) + (note.ds * 0.3) + (note.examen * 0.4);
+            return final.toFixed(2);
+        }
+
+        function saveNote(noteId, type, value) {
+            if(!notes[noteId]) notes[noteId] = { tp: '', ds: '', examen: '' };
+            notes[noteId][type] = value ? parseFloat(value) : '';
+            localStorage.setItem('notes', JSON.stringify(notes));
+            loadGrades();
+        }
+
+        // Gestion des accès
+        function updateAccessLevels() {
+            const section = document.getElementById('accessSection').value;
+            const levelSelect = document.getElementById('accessLevel');
+            
+            levelSelect.innerHTML = '<option value="">Choisir...</option>';
+            
+            if (section && matieresParSection[section]) {
+                Object.keys(matieresParSection[section]).forEach(level => {
+                    const option = document.createElement('option');
+                    option.value = level;
+                    option.textContent = level;
+                    levelSelect.appendChild(option);
+                });
+            }
+            
+            updateAccessSubjects();
+        }
+
+        function updateAccessSubjects() {
+            const section = document.getElementById('accessSection').value;
+            const level = document.getElementById('accessLevel').value;
+            const subjectSelect = document.getElementById('accessSubject');
+            
+            subjectSelect.innerHTML = '<option value="">Choisir...</option>';
+            
+            if (section && level && matieresParSection[section]?.[level]) {
+                matieresParSection[section][level].matieres.forEach(matiere => {
+                    const option = document.createElement('option');
+                    option.value = matiere.nom;
+                    option.textContent = matiere.nom;
+                    subjectSelect.appendChild(option);
+                });
+            }
+        }
+
+        function grantAccess() {
+            const access = {
+                teacher: document.getElementById('teacherSelect').value,
+                section: document.getElementById('accessSection').value,
+                level: document.getElementById('accessLevel').value,
+                subject: document.getElementById('accessSubject').value
+            };
+
+            if (!access.section || !access.level || !access.subject) {
+                alert('Veuillez remplir tous les champs');
+                return;
+            }
+
+            teacherAccess.push(access);
+            localStorage.setItem('teacherAccess', JSON.stringify(teacherAccess));
+            updateAccessList();
+        }
+
+        function revokeAccess(index) {
+            teacherAccess.splice(index, 1);
+            localStorage.setItem('teacherAccess', JSON.stringify(teacherAccess));
+            updateAccessList();
+        }
+
+        function updateAccessList() {
+            const tbody = document.getElementById('accessList');
+            tbody.innerHTML = teacherAccess.map((access, index) => `
+                <tr>
+                    <td>${access.teacher === '1' ? '👨🏫 M. Gammoudi' : '👩🏫 Mme. Ben Ali'}</td>
+                    <td>${access.section.toUpperCase()}</td>
+                    <td>${access.level}</td>
+                    <td>${access.subject}</td>
+                    <td><button class="revoke-btn" onclick="revokeAccess(${index})">❌ Révoquer</button></td>
+                </tr>
+            `).join('');
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeFilters();
+            updateAccessList();
+            loadGrades();
+        });
+    </script>
+</body>
+</html>

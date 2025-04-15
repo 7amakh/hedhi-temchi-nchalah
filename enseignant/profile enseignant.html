@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile</title>
+  <link rel="stylesheet" href="style/profile.css">
+  <style>
+    /* Style général de la grille d'informations */
+.info-grid {
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+/* Conteneur de chaque champ d'information */
+.info-item {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  align-items: start;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Style des labels */
+.info-item label {
+  font-weight: 600;
+  color: #2c3e50;
+  padding: 0.3rem 0;
+}
+
+/* Style des valeurs affichées */
+.info-item p {
+  margin: 0;
+  padding: 0.5rem;
+  color: #34495e;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  min-height: 1.5rem;
+}
+
+/* Style des champs d'édition */
+.edit-field {
+  padding: 0.5rem;
+  border: 1px solid #3498db;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 1rem;
+  background-color: #fff;
+  width: 100%;
+}
+
+.edit-field:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(52,152,219,0.2);
+}
+
+/* Style spécifique pour le textarea */
+#addressEdit {
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.5;
+}
+
+/* Adaptation mobile */
+@media (max-width: 768px) {
+  .info-item {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+  }
+  
+  .info-item label {
+      border-bottom: 1px solid #eee;
+      padding-bottom: 0.5rem;
+  }
+}
+/* Style de base pour les deux boutons */
+.edit-button, .save-button {
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1.5rem;
+  display: inline-block;
+}
+
+/* Bouton Édition */
+.edit-button {
+  background-color: #3498db;
+  color: white;
+  box-shadow: 0 4px 6px rgba(52, 152, 219, 0.2);
+}
+
+.edit-button:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(52, 152, 219, 0.3);
+}
+
+/* Bouton Sauvegarder */
+.save-button {
+  background-color: #2ecc71;
+  color: white;
+  margin-left: 1rem;
+  box-shadow: 0 4px 6px rgba(46, 204, 113, 0.2);
+}
+
+.save-button:hover {
+  background-color: #27ae60;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(46, 204, 113, 0.3);
+}
+
+/* État inactif */
+button[hidden] {
+  display: none !important;
+}
+
+/* Animation au clic */
+button:active {
+  transform: translateY(1px);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .edit-button, .save-button {
+      width: 100%;
+      margin-left: 0;
+      margin-top: 1rem;
+  }
+  
+  .save-button {
+      margin-left: 0;
+  }
+}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="back-button">
+      <a href="index enseignant.html"><img src="icon/chevron-gauche.png" alt="Retour">
+    </div>
+  </header>
+  
+  <h1 style="text-align: center; margin: 1rem 0;">Votre profil</h1>
+
+  <div class="container">
+    <aside class="sidebar">
+      <div class="profile-picture">
+        <img src="360_F_227450952_KQCMShHPOPebUXklULsKsROk5AvN6H1H.jpg" alt="Profile Avatar">
+      </div>
+      <nav>
+        <a href="#" class="active">Personal Info</a>
+        <a href="#">Data</a>
+        <a href="#">History</a>
+        <a href="#">Settings</a>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <section class="personal-info">
+        <h2>Personal Information</h2>
+        <div class="info-grid">
+          <div class="info-item">
+            <label>Full Name:</label>
+            <p id="nameDisplay">Jean Dupont</p>
+            <input type="text" id="nameEdit" class="edit-field" value="Jean Dupont" hidden>
+          </div>
+          <div class="info-item">
+            <label>Email:</label>
+            <p id="emailDisplay">jean.dupont@example.com</p>
+            <input type="email" id="emailEdit" class="edit-field" value="jean.dupont@example.com" hidden>
+          </div>
+          <div class="info-item">
+            <label>Phone:</label>
+            <p id="phoneDisplay">+33 6 12 34 56 78</p>
+            <input type="tel" id="phoneEdit" class="edit-field" value="+33612345678" hidden>
+          </div>
+          <div class="info-item">
+            <label>Address:</label>
+            <p id="addressDisplay">123 Rue de Paris<br>75001 Paris, France</p>
+            <textarea id="addressEdit" class="edit-field" hidden>123 Rue de Paris\n75001 Paris, France</textarea>
+          </div>
+        </div>
+        <button class="edit-button" id="editBtn">Edit Profile</button>
+        <button class="save-button" id="saveBtn" hidden>Save Changes</button>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize with localStorage data or defaults
+      const loadData = (key, defaultValue) => localStorage.getItem(key) || defaultValue;
+      
+      const userData = {
+        name: loadData('userName', 'Jean Dupont'),
+        email: loadData('userEmail', 'jean.dupont@example.com'),
+        phone: loadData('userPhone', '+33612345678'),
+        address: loadData('userAddress', '123 Rue de Paris\n75001 Paris, France')
+      };
+
+      // Set initial display values
+      document.getElementById('nameDisplay').textContent = userData.name;
+      document.getElementById('emailDisplay').textContent = userData.email;
+      document.getElementById('phoneDisplay').textContent = formatPhoneNumber(userData.phone);
+      document.getElementById('addressDisplay').innerHTML = userData.address.replace(/\n/g, '<br>');
+
+      // Initialize input fields
+      document.getElementById('nameEdit').value = userData.name;
+      document.getElementById('emailEdit').value = userData.email;
+      document.getElementById('phoneEdit').value = userData.phone;
+      document.getElementById('addressEdit').value = userData.address;
+
+      const editBtn = document.getElementById('editBtn');
+      const saveBtn = document.getElementById('saveBtn');
+      const displayFields = document.querySelectorAll('[id$="Display"]');
+      const editFields = document.querySelectorAll('.edit-field');
+
+      editBtn.addEventListener('click', () => {
+        displayFields.forEach(field => field.hidden = true);
+        editFields.forEach(field => field.hidden = false);
+        editBtn.hidden = true;
+        saveBtn.hidden = false;
+      });
+
+      saveBtn.addEventListener('click', () => {
+        // Get updated values
+        const updatedData = {
+          name: document.getElementById('nameEdit').value,
+          email: document.getElementById('emailEdit').value,
+          phone: document.getElementById('phoneEdit').value,
+          address: document.getElementById('addressEdit').value
+        };
+
+        // Save to localStorage
+        localStorage.setItem('userName', updatedData.name);
+        localStorage.setItem('userEmail', updatedData.email);
+        localStorage.setItem('userPhone', updatedData.phone);
+        localStorage.setItem('userAddress', updatedData.address);
+
+        // Update display
+        document.getElementById('nameDisplay').textContent = updatedData.name;
+        document.getElementById('emailDisplay').textContent = updatedData.email;
+        document.getElementById('phoneDisplay').textContent = formatPhoneNumber(updatedData.phone);
+        document.getElementById('addressDisplay').innerHTML = updatedData.address.replace(/\n/g, '<br>');
+
+        // Hide edit fields
+        displayFields.forEach(field => field.hidden = false);
+        editFields.forEach(field => field.hidden = true);
+        editBtn.hidden = false;
+        saveBtn.hidden = true;
+      });
+
+      function formatPhoneNumber(phone) {
+        const cleaned = phone.replace(/\D/g, '');
+        const match = cleaned.match(/^(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})$/);
+        return match ? `${match[1]} ${match[2]} ${match[3]} ${match[4]} ${match[5]}` : phone;
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>login page</title>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@200;300;400;500;600;700&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Open Sans", sans-serif;
+}
+.logo {
+  display: block;
+  margin: 0 auto; /* Center the logo */
+  width: 100px;
+}
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100%;
+  padding: 0 10px;
+  background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+}
+
+body::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: url("image/IMG_0115.jpg"), #000;
+  background-position: center;
+  background-size: cover;
+  z-index: -1;
+}
+
+.wrapper {
+  width: 380px;
+  border-radius: 15px;
+  padding: 20px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+  transition: all 0.3s ease;
+}
+
+.wrapper:hover {
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+h2 {
+  font-size: 2.2rem;
+  margin-bottom: 25px;
+  color: #ffffff;
+  letter-spacing: 1px;
+}
+
+.input-field {
+  position: relative;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+  margin: 15px 0;
+}
+
+.input-field label {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  color: #ffffff;
+  font-size: 16px;
+  pointer-events: none;
+  transition: 0.3s ease;
+}
+
+.input-field input {
+  width: 100%;
+  height: 40px;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 16px;
+  color: #ffffff;
+  padding: 0 10px;
+}
+
+.input-field input:focus~label,
+.input-field input:valid~label {
+  font-size: 0.9rem;
+  top: 10px;
+  transform: translateY(-150%);
+  color: #ffdde1;
+}
+
+.forget {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 15px 0 25px 0;
+  color: #ffffff;
+}
+
+#remember {
+  accent-color: #ffdde1;
+}
+
+.forget label {
+  display: flex;
+  align-items: center;
+}
+
+.forget label p {
+  margin-left: 8px;
+}
+
+.wrapper a {
+  color: #ffdde1;
+  text-decoration: none;
+}
+
+.wrapper a:hover {
+  text-decoration: underline;
+}
+
+button {
+  background-color: #23aa6b;
+  color: #ffffff;
+  font-weight: 600;
+  border: none;
+  padding: 15px 20px;
+  cursor: pointer;
+  border-radius: 25px;
+  font-size: 16px;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  margin-bottom: 10px; /* space entre les buttons */
+}
+
+button:hover {
+  color: #082e10;
+  background: rgba(255, 255, 255, 0.2);
+  border-color: #ffffff;
+}
+
+.register {
+  text-align: center;
+  margin-top: 20px;
+  color: #ffffff;
+}
+                                         
+                                                     
+            
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <form id="loginForm">
+      <img src="image/logo.png" alt="logo" class="logo">
+      <h2>Login</h2>
+      <div class="input-field">
+        <input type="email" name="email" id="email" required>
+        <label>Enter your email or username</label>
+      </div>
+      <div class="input-field">
+        <input type="password" name="password" id="password" required>
+        <label>Enter your password</label>
+      </div>
+      <div class="forget">
+        <label for="remember">
+          <input type="checkbox" id="remember">
+          <p>Remember me</p>
+        </label>  
+      </div>
+      <button type="submit">Log In</button>
+      
+    </form>
+    <!-- Move the Invite button outside the form -->
+    <form >
+    <button type="button"><a href="invite.html">Invite</a></button>
+    <div class="register">
+      <p><a href="index/forget.html">Forgot password?</a></p>
+    </div></form>
+  </div>
+
+  <script>
+   
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyCkq5qr5sA0Q63tzggfS4GS2_hFVvyXnUw",
+      authDomain: "universityportal-ee6a7.firebaseapp.com",
+      projectId: "universityportal-ee6a7",
+      storageBucket: "universityportal-ee6a7.firebasestorage.app",
+      messagingSenderId: "799224011090",
+      appId: "1:799224011090:web:11082b9b61c89fe4a2028b"
+    };
+  
+    // Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig); // No "import" needed
+
+    // Login function
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+  
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    if (!email.endsWith("@ismai.u-kairouan.tn")) {
+    alert("Please enter a valid ISMAI email address.");
+    return;
+    }
+
+    firebase.auth().signInWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+        // Redirect based on user role
+        checkUserRole(userCredential.user.uid);
+      })
+      .catch((error) => {
+        console.error(error);
+        alert("Login failed: " + error.message);
+      });
+  });
+
+  function checkUserRole(uid) {
+    firebase.firestore().collection('users').doc(uid).get()
+      .then((doc) => {
+        if (doc.exists) {
+          switch(doc.data().role) {
+            case 'student':
+              window.location.href = 'accueil.html';
+              break;
+            case 'teacher':
+              window.location.href = 'enseignant/index enseignant.html';
+              break;
+            case 'admin':
+              window.location.href = 'admin/index admin.html';
+              break;
+          }
+        }
+      });
+  }
+  </script>
+</body>
+</html>
